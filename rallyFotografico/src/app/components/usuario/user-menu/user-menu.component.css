@@ -1,0 +1,102 @@
+body {
+    font-family: 'Lexend', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e1ebec;
+}
+
+.foto img {
+    width: 100%; /* La imagen ocupa el ancho completo */
+    height: 500px;
+    object-fit: cover;
+}
+
+.contenido {
+    font-size: 1.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente */
+    align-items: center; /* Centra horizontalmente */
+    text-align: justify; /* Justifica el texto */
+    padding: 20px;
+    max-width: 1000px; /* Limita el ancho para que no sea demasiado ancho */
+    margin: 0 auto; /* Centra horizontalmente */
+}
+
+h1 {
+    text-align: center; /* Centra el título */
+    margin-bottom: 20px;
+}
+
+h2 {
+    text-align: center; /* Centra el título */
+    margin-bottom: 20px;
+}
+
+.contenido p {
+    margin-bottom: 20px;
+    color: rgb(27, 52, 65);
+}
+
+.contenido button {
+    background-color: #6eaff5;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    font-size: large;
+    
+}
+
+.contenido button:hover {
+    background-color: #0056b3;
+}
+
+.carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.carousel button:hover{
+    background-color: rgba(0, 0, 0, 0.267);
+}
+
+.contacto p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.contacto img {
+    width: 100%; /* La imagen ocupa el ancho completo */
+    height: 500px;
+    object-fit: cover;
+}
+
+div form{
+    padding-left: 80px;
+    padding-right: 80px;
+}
+
+div form button{
+    margin-left: 10px;
+    margin-bottom: 50px;
+}
+
+.footer {
+    background-color: #6eaff5;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    bottom: 0;
+    width: 100%;
+}

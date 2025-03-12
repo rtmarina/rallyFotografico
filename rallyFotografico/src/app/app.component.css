@@ -1,0 +1,98 @@
+html {
+    overflow: auto;
+}
+
+.navbar {
+    background-color: #2f5a8d;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    height: 100px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #c3d7ee;
+    display: flex;
+    align-items: center;
+    font-family: 'lexend';
+    letter-spacing: 2px;
+}
+
+.navbar-nav .nav-link {
+    color: white;
+    font-family: 'lexend';
+}
+
+.navbar-nav .nav-link:hover {
+    color: #2f5a8d;
+}
+
+
+.navbar-toggler {
+    background-color: #7fa6d3;
+    border: none;
+    padding: 10px 15px;
+}
+
+.navbar-toggler-icon {
+    background-color: #7fa6d3;
+    
+}
+
+.navbar-toggler:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.navbar-collapse {
+    background-color: #2f5a8d;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.navbar-collapse .nav-link {
+    color: white;
+    font-family: 'lexend';
+    font-size: 1.2rem;
+    padding: 10px;
+}
+
+.navbar-collapse .nav-link:hover {
+    color: #a9d1ff;
+}
+
+.dropdown-menu {
+    background-color:#496f9b !important;
+    border: none;
+    border-radius: 5px;
+}
+
+.dropdown-menu .dropdown-item {
+    color: white !important;
+    font-family: 'lexend';
+    font-size: 1rem;
+    padding: 10px;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #2f5a8d !important;
+    color: white !important;
+}
+
+.dropdown-divider {
+    border-top: 3px solid #2f5a8d;
+}
+
+@media (max-width: 767px) {
+    .navbar-toggler {
+        background-color: #2f5a8d;
+        padding: 10px 15px;
+    }
+
+    .navbar-collapse {
+        padding: 20px;
+        border-radius: 15px;
+    }
+}
