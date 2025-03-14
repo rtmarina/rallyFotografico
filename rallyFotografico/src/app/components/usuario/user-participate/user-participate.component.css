@@ -1,0 +1,110 @@
+/* Estilo general del formulario */
+*{
+    font-family: 'Lexend', sans-serif;
+}
+.fondo{
+    background-image: url(/join-bg.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.join {
+    background-color: #f7f9fc00;
+    padding: 40px 20px;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 0px auto;
+}
+
+.join h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #0d3a74;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+/* Estilo de los campos del formulario */
+.formulario {
+    background-color: rgba(154, 216, 245, 0.534);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #272626;
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.form-check-label {
+    font-size: 0.95rem;
+    color: #123f7a;
+    font-weight: bold;
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Estilo del botón */
+.btn-primary {
+    background-color: #6eaff5;
+    border-color: #6eaff5;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.col-6, .col-3, .col-12 {
+    margin-bottom: 20px;
+}
+
+/* Ajustes para hacer el formulario responsive */
+@media (max-width: 767px) {
+    .join {
+        padding: 20px;
+    }
+
+    .formulario {
+        padding: 15px;
+    }
+
+    .col-6, .col-3 {
+        width: 100%;
+    }
+
+    .btn-primary {
+        font-size: 1rem;
+        padding: 10px 15px;
+    }
+}
