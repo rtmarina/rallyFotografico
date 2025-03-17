@@ -1,4 +1,4 @@
-*{
+/* *{
     font-family: 'Lexend', sans-serif;
 }
 .fondo{
@@ -38,7 +38,7 @@
     color: #ff385c;
   }
   
-  /* Estilo para la paginación */
+
   .pagination {
     display: flex;
     justify-content: center;
@@ -67,4 +67,4 @@
   .pagination-controls .ngx-pagination a:hover {
     background-color: #f0f0f0;
   }
-  
+   */
