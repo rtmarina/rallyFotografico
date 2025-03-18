@@ -66,4 +66,19 @@ body{
   .pagination-controls .ngx-pagination a:hover {
     background-color: #f0f0f0;
   }
-  
+
+  .cargar {
+    background-color:rgb(197, 230, 235);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .cargar .btn {
+    color: #09519e;
+    font-size: 18px;
+    font-weight: bold;
+  }

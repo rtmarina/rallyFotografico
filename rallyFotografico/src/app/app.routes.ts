@@ -4,6 +4,7 @@ import { UserInfoComponent } from './components/usuario/user-info/user-info.comp
 import { UserGalleryComponent } from './components/usuario/user-gallery/user-gallery.component';
 import { UserParticipateComponent } from './components/usuario/user-participate/user-participate.component';
 import { UserLoginComponent } from './components/usuario/user-login/user-login.component';
+import { UserMisfotosComponent } from './components/usuario/user-misfotos/user-misfotos.component';
 
 export const routes: Routes = [
     {
@@ -20,5 +21,8 @@ export const routes: Routes = [
     },
     {
         path: 'login', component: UserLoginComponent
+    },
+    {
+        path: 'misfotos', component: UserMisfotosComponent
     }
 ];
