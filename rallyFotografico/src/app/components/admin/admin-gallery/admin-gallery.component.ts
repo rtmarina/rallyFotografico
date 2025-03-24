@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
-  selector: 'app-user-misfotos',
-  imports: [CommonModule, NgxPaginationModule],
-  templateUrl: './user-misfotos.component.html',
-  styleUrl: './user-misfotos.component.css'
+  selector: 'app-admin-gallery',
+  templateUrl: './admin-gallery.component.html',
+  styleUrls: ['./admin-gallery.component.css'],
+  imports: [NgxPaginationModule, CommonModule],
 })
-export class UserMisfotosComponent {
+export class AdminGalleryComponent implements OnInit {
   photos: any[] = []; // Lista dinámica de fotos cargadas desde el backend
   currentPage = 1;
   fImagen: File | null = null; // Archivo seleccionado
@@ -116,44 +116,4 @@ export class UserMisfotosComponent {
       alert("Hubo un error al subir el archivo.");
     }
   }
-// Método para eliminar una foto desde el backend
-async deletePhoto(photoId: number, photoUrl: string) {
-  if (!confirm('¿Estás seguro de que deseas eliminar esta foto?')) return;
-
-  // Extraer solo el nombre del archivo
-  const fileName = photoUrl.split('/').pop();
-
-  if (!fileName) {
-    console.error('Error al obtener el nombre del archivo.');
-    return;
-  }
-
-  const urlToDelete = `${this.url}?peticion=eliminarArchivo&archivo=${fileName}`;
-
-  const parametros = {
-    method: 'DELETE',
-  };
-
-  try {
-    const respuesta = await fetch(urlToDelete, parametros);
-
-    if (respuesta.ok) {
-      console.log(`Foto eliminada con éxito: ${fileName}`);
-
-      // Eliminar la foto de la lista para actualizar la interfaz
-      this.photos = this.photos.filter(photo => photo.id !== photoId);
-
-      alert('Foto eliminada correctamente');
-    } else {
-      console.error('Error al eliminar la foto:', await respuesta.text());
-      alert('Error al eliminar la foto.');
-    }
-  } catch (error) {
-    console.error('Error en la solicitud:', error);
-    alert('Hubo un error al eliminar la foto.');
-  }
-}
-
-
-
 }

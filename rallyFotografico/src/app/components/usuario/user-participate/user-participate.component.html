@@ -1,59 +1,31 @@
 <div class="fondo">
-<div class="join">
-    
-    <div class="formulario">
-        <h2>Nos alegra que te interese participar en FotoRall, para ello por favor rellena el siguiente formulario:</h2>
-    <form class="row g-3">
-        <div class="col-6">
+    <div class="join">
+      <div class="formulario">
+        <h2>Nos alegra que te interese participar en FotoRall, por favor rellena el siguiente formulario:</h2>
+        <form class="row g-3" (submit)="registrarUsuario($event)">
+          <div class="col-6">
             <label for="nombreInput" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombreInput" placeholder="Nombre">
-        </div>
-        <div class="col-6">
-            <label for="apellidosInput" class="form-label">Apellidos</label>
-            <input type="text" class="form-control"  id="apellidosInput" placeholder="Apellidos">
-        </div>
-        <div class="col-6">
-            <label for="fechaInput" class="form-label">Fecha de nacimiento</label>
-            <input type="date" class="form-control"  id="fechaInput" placeholder="Fecha de nacimiento">
-        </div>
-        <div class="col-6">
-            <label for="nombreInput" class="form-label">Email</label>
-            <input type="email" class="form-control"  id="emailInput" placeholder="Correo electrónico">
-        </div>
-
-        <div class="col-12">
-            <label for="inputAddress" class="form-label">Direccion</label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="Dirección de correo">
-        </div>
-
-        <div class="col-6">
-            <label for="inputCity" class="form-label">Ciudad</label>
-            <input type="text" class="form-control" id="inputCity" placeholder="Ciudad">
-        </div>
-
-        <div class="col-3">
-            <label for="inputPostalCode" class="form-label">Codigo postal</label>
-            <input type="text" class="form-control" id="inputPostalCode" placeholder="Codigo postal">
-        </div>
-
-        <div class="col-3">
-            <label for="inputCountry" class="form-label">Pais</label>
-            <input type="text" class="form-control" id="inputCountry" placeholder="Pais">
-        </div>
-        <div class="col-12">
+            <input type="text" class="form-control" id="nombreInput" [(ngModel)]="nombre" name="nombre" placeholder="Nombre" required>
+          </div>
+          <div class="col-6">
+            <label for="emailInput" class="form-label">Email</label>
+            <input type="email" class="form-control" id="emailInput" [(ngModel)]="email" name="email" placeholder="Correo electrónico" required>
+          </div>
+          <div class="col-12">
             <label for="inputPassword" class="form-label">Contraseña</label>
-            <input type="text" class="form-control" id="inputPassword" placeholder="Contraseña">
-        </div>
-
-        <div class="col-12">
-            <input type="checkbox" class="form-check-input" id="check">
+            <input type="password" class="form-control" id="inputPassword" [(ngModel)]="password" name="password" placeholder="Contraseña" required>
+          </div>
+  
+          <div class="col-12">
+            <input type="checkbox" class="form-check-input" id="check" [(ngModel)]="terminosCondiciones" name="terminosCondiciones" required>
             <label class="form-check-label" for="check">Acepto los términos y condiciones</label>
-        </div>
-
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary"> Regístrate</button>
-        </div>
-    </form>
-</div>
-</div>
-</div>
+          </div>
+  
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Regístrate</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

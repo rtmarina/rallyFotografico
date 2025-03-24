@@ -5,6 +5,9 @@ import { UserGalleryComponent } from './components/usuario/user-gallery/user-gal
 import { UserParticipateComponent } from './components/usuario/user-participate/user-participate.component';
 import { UserLoginComponent } from './components/usuario/user-login/user-login.component';
 import { UserMisfotosComponent } from './components/usuario/user-misfotos/user-misfotos.component';
+import { AdminGalleryComponent } from './components/admin/admin-gallery/admin-gallery.component';
+import { AdminMenuComponent } from './components/admin/admin-menu/admin-menu.component';
+import { AdminValidationComponent } from './components/admin/admin-validation/admin-validation.component';
 
 export const routes: Routes = [
     {
@@ -24,5 +27,17 @@ export const routes: Routes = [
     },
     {
         path: 'misfotos', component: UserMisfotosComponent
+    },
+    {
+        path: 'adminGallery', component: AdminGalleryComponent
+    },
+    {
+        path: 'adminMenu', component: AdminMenuComponent
+    },
+    {
+        path: 'gestionUsuarios', component: AdminMenuComponent
+    },
+    {
+        path: 'gestionFotografias', component: AdminValidationComponent
     }
 ];

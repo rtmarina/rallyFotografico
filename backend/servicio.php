@@ -11,6 +11,7 @@ if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
 
+//SERVICIO IMAGENES
 
 // Carpeta donde se guardan las imágenes
 $carpeta = __DIR__ . "/imagenes";
@@ -18,6 +19,9 @@ $carpeta = __DIR__ . "/imagenes";
 // Lógica principal
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['peticion'])) {
     switch ($_POST['peticion']) {
+        case 'crearUsuario':
+            crearUsuario($mysqli);
+            break;
         case 'crearArchivo':
             crearArchivo($carpeta);
             break;
@@ -109,18 +113,49 @@ function renombrarArchivo($put_vars, $carpeta) {
 }
 
 function eliminarArchivo($delete_vars, $carpeta) {
-    if (isset($delete_vars["archivo"])) {
-        $archivo = $carpeta . '/' . $delete_vars["archivo"];
+    // Ahora se toma el parámetro 'archivo' desde la URL (no desde el cuerpo)
+    if (isset($_GET['archivo'])) {
+        $archivo = $carpeta . '/' . trim(basename($_GET['archivo']));
+
+        // Depuración adicional
+        error_log("Archivo recibido para eliminar: " . $_GET['archivo']);
+        error_log("Ruta construida: " . $archivo);
+
         if (file_exists($archivo)) {
             if (unlink($archivo)) {
                 echo json_encode(["mensaje" => "Archivo eliminado con éxito"]);
             } else {
+                error_log("⚠️ No se pudo eliminar el archivo: " . $archivo);
                 echo json_encode(["error" => "No se pudo eliminar el archivo"]);
             }
         } else {
+            error_log("❌ Archivo no encontrado: " . $archivo);
             echo json_encode(["error" => "Archivo no encontrado"]);
         }
     } else {
+        error_log("❌ Parámetro 'archivo' no proporcionado");
         echo json_encode(["error" => "Parámetro 'archivo' es requerido"]);
+    }
+}
+// Función para crear un usuario
+function crearUsuario($mysqli) {
+    // Obtener los datos del cuerpo de la solicitud
+    $data = json_decode(file_get_contents("php://input"), true);
+    
+    if (isset($data['nombre'], $data['email'], $data['password'])) {
+        $nombre = $mysqli->real_escape_string($data['nombre']);
+        $email = $mysqli->real_escape_string($data['email']);
+        $password = password_hash($data['contraseña'], PASSWORD_DEFAULT); // Asegúrate de hashear la contraseña
+
+        // Crear la consulta SQL para insertar el nuevo usuario
+        $query = "INSERT INTO usuarios (nombre, email, contraseña, fecha_registro, rol) VALUES ('$nombre', '$email', '$password', NOW(), 'participante')";
+        
+        if ($mysqli->query($query) === TRUE) {
+            echo json_encode(["mensaje" => "Usuario registrado correctamente"]);
+        } else {
+            echo json_encode(["error" => "Error al registrar el usuario", "detalle" => $mysqli->error]);
+        }
+    } else {
+        echo json_encode(["error" => "Faltan datos en la solicitud"]);
     }
 }
