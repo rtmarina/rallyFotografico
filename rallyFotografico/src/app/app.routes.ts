@@ -8,6 +8,7 @@ import { UserMisfotosComponent } from './components/usuario/user-misfotos/user-m
 import { AdminGalleryComponent } from './components/admin/admin-gallery/admin-gallery.component';
 import { AdminMenuComponent } from './components/admin/admin-menu/admin-menu.component';
 import { AdminValidationComponent } from './components/admin/admin-validation/admin-validation.component';
+import { AdminUsuariosComponent } from './components/admin/admin-usuarios/admin-usuarios.component';
 
 export const routes: Routes = [
     {
@@ -35,7 +36,7 @@ export const routes: Routes = [
         path: 'adminMenu', component: AdminMenuComponent
     },
     {
-        path: 'gestionUsuarios', component: AdminMenuComponent
+        path: 'gestionUsuarios', component: AdminUsuariosComponent
     },
     {
         path: 'gestionFotografias', component: AdminValidationComponent

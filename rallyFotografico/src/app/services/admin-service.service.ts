@@ -26,14 +26,6 @@ export class AdminServiceService {
     return this.http.post(this.url, cuerpo);
   }
 
-  // public insertarUser(usuario: Usuarios) {
-  //   let cuerpo = JSON.stringify({
-  //     servicio: "crearUsuario",
-  //     usuario: usuario
-  //   });
-  //   return this.http.post<Usuarios>(this.url, cuerpo);
-  // }
-
   public insertarUser(usuario: Usuarios) {
     let copia = JSON.parse(JSON.stringify(usuario));
     copia.servicio = "crearUsuario";
