@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AdminServiceService } from '../../../services/admin-service.service';
+import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-participate',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, HttpClientModule],
+  providers: [AdminServiceService],
   templateUrl: './user-participate.component.html',
   styleUrls: ['./user-participate.component.css']
 })
@@ -15,13 +19,9 @@ export class UserParticipateComponent {
   password: string = '';
   terminosCondiciones: boolean = false;
 
-  url = "http://localhost/FCT/rallyFotografico/backend/servicio.php"; // URL del backend
+  constructor(private adminService: AdminServiceService, private router: Router) {}
 
-  constructor() {}
-
-  // Método para registrar un nuevo usuario
-  async registrarUsuario(event: Event) {
-    event.preventDefault();
+  registrarUsuario(event: Event) {
 
     if (!this.terminosCondiciones) {
       alert('Debes aceptar los términos y condiciones.');
@@ -34,18 +34,8 @@ export class UserParticipateComponent {
       password: this.password
     };
 
-    const parametros = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(usuario)
-    };
-
-    try {
-      const respuesta = await fetch(`${this.url}?peticion=registrarUsuario`, parametros);
-      if (respuesta.ok) {
-        const datos = await respuesta.json();
+    this.adminService.insertarUser(usuario).subscribe({
+      next: (datos) => {
         console.log('Usuario registrado correctamente:', datos);
         alert('Usuario registrado con éxito');
         // Limpiar formulario después del registro
@@ -53,14 +43,12 @@ export class UserParticipateComponent {
         this.email = '';
         this.password = '';
         this.terminosCondiciones = false;
-      } else {
-        const error = await respuesta.json();
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
         console.error('Error al registrar usuario:', error);
         alert('Hubo un error al registrar el usuario');
       }
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-      alert('Hubo un error al procesar el formulario');
-    }
+    });
   }
 }
