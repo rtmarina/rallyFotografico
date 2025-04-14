@@ -31,6 +31,9 @@ if($objeto != null){
             borrarUsuario($objeto);
             print json_encode(listadoUsuarios());
             break;
+        case "iniciarSesion":
+            print json_encode(iniciarSesion($objeto->email, $objeto->password));
+            break;
     }
 }
 
@@ -74,6 +77,42 @@ function borrarUsuario($id){
 			return false;
 	}
 }
+
+//INICIO SESION
+
+// INICIO SESION
+function iniciarSesion($email, $password) {
+    global $mysqli;
+    try {
+        $sql = "SELECT id, nombre, email, password, rol FROM usuarios WHERE email = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        if ($res->num_rows === 1) {
+            $usuario = $res->fetch_assoc();
+            if ($usuario['password'] === $password) {
+                unset($usuario['password']); // Elimina la contraseña antes de devolver los datos
+                return json_encode(['success' => true, 'usuario' => $usuario]); // Devuelve solo el usuario autenticado
+            } else {
+                return json_encode(['success' => false, 'error' => 'Contraseña incorrecta']);
+            }
+        } else {
+            return json_encode(['success' => false, 'error' => 'Usuario no encontrado']);
+        }
+    } catch (Exception $e) {
+        return json_encode(['success' => false, 'error' => $e->getMessage()]);
+    }
+}
+
+
+
+
+
+
+
+
 //SERVICIO IMAGENES
 
 // // Carpeta donde se guardan las imágenes

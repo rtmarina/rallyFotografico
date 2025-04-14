@@ -31,25 +31,18 @@
                 <li><a class="dropdown-item" href="/misfotos">Mis fotografías</a></li>
             </ul>
           </li>
-          <!-- FUTURO RANKING -->
-          <!-- <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Ranking
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/top">Últimas fotografías</a></li>
-              <li><a class="dropdown-item" href="/albumes">Álbumes</a></li>
-            </ul>
-          </li> -->
           <li class="nav-item">
             <a class="nav-link" href="/participa">Participa</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/login"><i class="bi bi-person-circle"></i>Mi cuenta</a>
+            <a class="nav-link" href="/login"><i class="bi bi-person-circle"></i>Iniciar sesión</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/adminMenu">ADMIN</a>
+            <a class="nav-link" href="/account"><i class="bi bi-person-circle"></i>Mi cuenta</a>
           </li>
+          <li class="nav-item" *ngIf="esAdmin()">
+            <a class="nav-link" href="/adminMenu">ADMIN</a>
+          </li>          
         </ul>
       </div>
     </div>

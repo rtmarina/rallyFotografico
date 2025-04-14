@@ -1,0 +1,13 @@
+<div class="container mt-4" *ngIf="usuario; else noLogueado">
+    <h2>Bienvenido, {{ usuario.nombre }}</h2>
+    <p><strong>Email:</strong> {{ usuario.email }}</p>
+    <p><strong>ID:</strong> {{ usuario.id }}</p>
+    <button (click)="cerrarSesion()" class="btn-cerrar">Cerrar sesión</button>
+  </div>
+  
+  <ng-template #noLogueado>
+    <div class="container mt-4 no-login">
+      <h2>Por favor, inicie sesión para ver su cuenta.</h2>
+    </div>
+  </ng-template>
+  

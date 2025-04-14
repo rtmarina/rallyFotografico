@@ -9,6 +9,7 @@ import { AdminGalleryComponent } from './components/admin/admin-gallery/admin-ga
 import { AdminMenuComponent } from './components/admin/admin-menu/admin-menu.component';
 import { AdminValidationComponent } from './components/admin/admin-validation/admin-validation.component';
 import { AdminUsuariosComponent } from './components/admin/admin-usuarios/admin-usuarios.component';
+import { UserAccountComponent } from './components/usuario/user-account/user-account.component';
 
 export const routes: Routes = [
     {
@@ -40,5 +41,8 @@ export const routes: Routes = [
     },
     {
         path: 'gestionFotografias', component: AdminValidationComponent
+    },
+    {
+        path: 'account', component: UserAccountComponent
     }
 ];
