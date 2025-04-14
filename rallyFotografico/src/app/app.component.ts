@@ -12,15 +12,10 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
   title = 'rallyFotografico';
 
-  usuario: any = null;
-
-  constructor() {
-    const datos = localStorage.getItem('usuario');
-    this.usuario = datos ? JSON.parse(datos) : null;
-  }
-  
   esAdmin(): boolean {
-    return this.usuario?.rol === 'admin';
+    const datos = localStorage.getItem('usuario');
+    const usuario = datos ? JSON.parse(datos) : null;
+    return usuario?.rol === 'admin';
   }
   
 }
