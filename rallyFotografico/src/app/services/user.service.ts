@@ -18,4 +18,16 @@ export class UserService {
     };
     return this.http.post(this.url, payload);
   }
+
+  insertarImagen(imagen: any): Observable<any> {
+    const parametros = {
+      servicio: 'registrarImagen',
+      usuario_id: imagen.usuario_id,
+      nombre: imagen.nombre,
+      imagen_base64: imagen.imagen_base64
+    };
+
+    return this.http.post(this.url, parametros);
+  }
+  
 }

@@ -5,42 +5,76 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 
 // Conexión a la base de datos
-$mysqli = new mysqli( "localhost", "root", "", "rally_fotografico");
+$mysqli = new mysqli("localhost", "root", "", "rally_fotografico");
 
 if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
 
+// Verifica si se hace una petición GET y si es para listar archivos
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['peticion']) && $_GET['peticion'] === 'listarArchivos') {
+    $imagenes = array_diff(scandir("imagenes/"), array(".", "..")); // Lee archivos de la carpeta
+    echo json_encode(["imagenes" => array_values($imagenes)]);
+    exit;
+}
+
 $datos = file_get_contents('php://input');
-$objeto=json_decode($datos);
+$objeto = json_decode($datos);
 
-// $objeto = new stdClass();
-// $objeto -> servicio = "listarUsuarios";
-//USUARIOS
+// Verificar la petición POST
+// Verifica si se hace una petición POST y si es para crear un archivo
+if (isset($_POST['peticion']) && $_POST['peticion'] == 'crearArchivo') {
+    // Verifica si se ha recibido un archivo
+    if (isset($_FILES['archivo'])) {
+        // Elimina la línea de var_dump para evitar la salida no válida
+        // var_dump($_FILES['archivo']); // Esta línea debe ser eliminada
 
-if($objeto != null){
-    switch($objeto -> servicio){
+        $archivo = $_FILES['archivo'];
+        
+        // Definir el destino para el archivo
+        $directorioDestino = "imagenes/" . basename($archivo['name']);
+        
+        // Mover el archivo a la carpeta de destino
+        if (move_uploaded_file($archivo['tmp_name'], $directorioDestino)) {
+            echo json_encode(['success' => true, 'mensaje' => 'Archivo subido correctamente']);
+        } else {
+            echo json_encode(['error' => 'Error al mover el archivo']);
+        }
+    } else {
+        echo json_encode(['error' => 'No se recibió el archivo']);
+    }
+    exit;
+}
+
+
+// El resto de las funcionalidades (usuarios, etc.) se mantienen igual
+if ($objeto != null && isset($objeto->servicio)) {
+    switch ($objeto->servicio) {
         case "listarUsuarios":
-            print json_encode(listadoUsuarios());
+            echo json_encode(listadoUsuarios());
             break;
         case "crearUsuario":
             crearUsuario($objeto);
-            print json_encode(listadoUsuarios());
+            echo json_encode(listadoUsuarios());
             break;
         case "borrarUsuario":
             borrarUsuario($objeto);
-            print json_encode(listadoUsuarios());
+            echo json_encode(listadoUsuarios());
             break;
         case "iniciarSesion":
-            print json_encode(iniciarSesion($objeto->email, $objeto->password));
+            echo iniciarSesion($objeto->email, $objeto->password);
             break;
+        case "registrarImagen":
+            insertarImagen($objeto);
+            break;
+        default:
+            echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
     }
 }
 
-//METODOS USUARIOS
 
+// Métodos de usuarios (se mantienen igual)
 function listadoUsuarios(){
-    //conexion a la base de datos
     global $mysqli;
     try{
         $sql = "SELECT * FROM usuarios order by id desc";
@@ -67,20 +101,17 @@ function crearUsuario($objeto){
 }
 
 function borrarUsuario($id){
-	global $conn;
-	try {
-		$sql = "delete from usuarios where id = ?";	
-		$conn->prepare($sql)->execute(array($id));
-		return true;
-	} catch (Exception $e) {
-			die($e->getMessage());
-			return false;
-	}
+    global $conn;
+    try {
+        $sql = "delete from usuarios where id = ?";  
+        $conn->prepare($sql)->execute(array($id));
+        return true;
+    } catch (Exception $e) {
+        die($e->getMessage());
+        return false;
+    }
 }
 
-//INICIO SESION
-
-// INICIO SESION
 function iniciarSesion($email, $password) {
     global $mysqli;
     try {
@@ -94,7 +125,7 @@ function iniciarSesion($email, $password) {
             $usuario = $res->fetch_assoc();
             if ($usuario['password'] === $password) {
                 unset($usuario['password']); // Elimina la contraseña antes de devolver los datos
-                return json_encode(['success' => true, 'usuario' => $usuario]); // Devuelve solo el usuario autenticado
+                return json_encode(['success' => true, 'usuario' => $usuario]);
             } else {
                 return json_encode(['success' => false, 'error' => 'Contraseña incorrecta']);
             }
@@ -105,6 +136,36 @@ function iniciarSesion($email, $password) {
         return json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 }
+
+//IMAGENES
+function insertarImagen($objeto) {
+    global $mysqli;
+    try {
+        $sql = "INSERT INTO fotografias (usuario_id, nombre, imagen_base64, estado) VALUES (?, ?, ?, 'pendiente')";
+        $stm = $mysqli->prepare($sql);
+
+        if (!$stm) {
+            echo json_encode(['success' => false, 'error' => 'Error al preparar la consulta']);
+            return false;
+        }
+
+        $stm->bind_param("iss", $objeto->usuario_id, $objeto->nombre, $objeto->imagen_base64);
+
+        if ($stm->execute()) {
+            echo json_encode(['success' => true, 'mensaje' => 'Imagen registrada correctamente']);
+            return true;
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Error al ejecutar la consulta']);
+            return false;
+        }
+
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        return false;
+    }
+}
+
+
 
 
 
