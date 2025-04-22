@@ -17,7 +17,7 @@
           *ngFor="let photo of photos | paginate: { itemsPerPage: 15, currentPage: currentPage }" 
           class="col-md-4 col-sm-6 col-12">
           <div class="photo-card">
-            <img [src]="photo.url" alt="Foto">
+            <img [src]="photo.url" alt="Foto"> 
             <div class="actions">
                 <!-- dar funcionalidad a los botones -->
                 <button (click)="deletePhoto(photo.id, photo.url)">

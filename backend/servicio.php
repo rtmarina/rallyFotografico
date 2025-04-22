@@ -2,7 +2,15 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-header("Content-Type: application/json; charset=UTF-8");
+
+
+// Permitir solicitudes preflight (CORS)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    exit; // Terminar la ejecución para las solicitudes preflight
+}
 
 // Conexión a la base de datos
 $mysqli = new mysqli("localhost", "root", "", "rally_fotografico");
@@ -65,8 +73,12 @@ if ($objeto != null && isset($objeto->servicio)) {
             echo iniciarSesion($objeto->email, $objeto->password);
             break;
         case "registrarImagen":
-            insertarImagen($objeto);
+            registrarImagen($objeto);
+            echo json_encode(['success' => true, 'mensaje' => 'Imagen registrada correctamente']);
             break;
+            case "listarFotosPorUsuario":
+                echo json_encode(listarFotosPorUsuario($objeto->usuario_id));
+                break;
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
     }
@@ -138,33 +150,32 @@ function iniciarSesion($email, $password) {
 }
 
 //IMAGENES
-function insertarImagen($objeto) {
+
+function registrarImagen($objeto){
     global $mysqli;
     try {
-        $sql = "INSERT INTO fotografias (usuario_id, nombre, imagen_base64, estado) VALUES (?, ?, ?, 'pendiente')";
-        $stm = $mysqli->prepare($sql);
-
-        if (!$stm) {
-            echo json_encode(['success' => false, 'error' => 'Error al preparar la consulta']);
-            return false;
-        }
-
-        $stm->bind_param("iss", $objeto->usuario_id, $objeto->nombre, $objeto->imagen_base64);
-
-        if ($stm->execute()) {
-            echo json_encode(['success' => true, 'mensaje' => 'Imagen registrada correctamente']);
-            return true;
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Error al ejecutar la consulta']);
-            return false;
-        }
-
+        $sql = "INSERT INTO fotografias (usuario_id, nombre, base64) VALUES (?, ?, ?)";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("iss", $objeto->usuario_id, $objeto->nombre, $objeto->base64);
+        $stmt->execute();
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
-        return false;
     }
 }
 
+function listarFotosPorUsuario($usuario_id) {
+    global $mysqli;
+    try {
+        $sql = "SELECT * FROM fotografias WHERE usuario_id = ? ORDER BY id DESC";
+        $stm = $mysqli->prepare($sql);
+        $stm->bind_param("i", $usuario_id);
+        $stm->execute();
+        $result = $stm->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    } catch (Exception $e) {
+        return ["error" => $e->getMessage()];
+    }
+}
 
 
 

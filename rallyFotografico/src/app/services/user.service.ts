@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private url: string = "http://localhost/FCT/rallyFotografico/backend/servicio.php";
+  private url: string = "http://localhost/rallyFotografico/backend/servicio.php";
 
   constructor(private http: HttpClient) {}
 
@@ -19,15 +19,24 @@ export class UserService {
     return this.http.post(this.url, payload);
   }
 
-  insertarImagen(imagen: any): Observable<any> {
-    const parametros = {
-      servicio: 'registrarImagen',
-      usuario_id: imagen.usuario_id,
-      nombre: imagen.nombre,
-      imagen_base64: imagen.imagen_base64
-    };
+  // Guardar imagen Base64 en la base de datos
+registrarImagen(usuario_id: number, nombre: string, base64: string): Observable<any> {
+  const payload = {
+    servicio: 'registrarImagen',
+    usuario_id,
+    nombre,
+    base64
+  };
+  return this.http.post(this.url, payload);
+}
 
-    return this.http.post(this.url, parametros);
-  }
-  
+// Obtener imágenes del usuario
+listarFotosPorUsuario(usuario_id: number): Observable<any> {
+  const payload = {
+    servicio: 'listarFotosPorUsuario',
+    usuario_id: usuario_id
+  };
+  return this.http.post(this.url, payload);
+}
+
 }
