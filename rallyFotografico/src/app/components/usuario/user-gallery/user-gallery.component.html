@@ -3,37 +3,29 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-  <div class="imagen">
-    <img src="{{imagen64}}" />
-  </div>
   <div class="fondo">
-<div class="container">
-    <div class="row">
-      <div 
-        *ngFor="let photo of photos | paginate: { itemsPerPage: 15, currentPage: currentPage }" 
-        class="col-md-4 col-sm-6 col-12"
-      >
-        <div class="photo-card">
-          <img [src]="photo.url" alt="Foto">
-          <div class="actions">
-            <button (click)="likePhoto(photo.id)" class="like-btn">
-              ❤️ {{ photo.likes }}
-            </button>
+    <div class="container">
+      <div class="row">
+        <!-- Mostrar las fotos en tarjetas con tamaño uniforme -->
+        <div *ngFor="let photo of photos | paginate: { itemsPerPage: 6, currentPage: currentPage }" class="col-md-4 d-flex justify-content-center">
+          <div class="photo-card">
+            <img [src]="photo.url" [alt]="photo.nombre" />
+            <div class="actions">
+              <p>{{ photo.nombre }}</p>
+              <button class="like-btn" (click)="likePhoto(photo.id)">❤️ {{ photo.likes }}</button>
+            </div>
           </div>
+        </div>
+
+        <!-- Controles de paginación centrados -->
+        <div class="pagination">
+          <pagination-controls (pageChange)="currentPage = $event" class="pagination-controls"></pagination-controls>
         </div>
       </div>
     </div>
-  
-   
-     <pagination-controls 
-      (pageChange)="currentPage = $event" 
-      previousLabel="Anterior" 
-      nextLabel="Siguiente"
-      class="pagination"
-    ></pagination-controls>
   </div>
-  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-  </body>
+</body>

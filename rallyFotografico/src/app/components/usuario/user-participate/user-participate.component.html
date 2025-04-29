@@ -1,31 +1,48 @@
 <div class="fondo">
-    <div class="join">
-      <div class="formulario">
-        <h2>Nos alegra que te interese participar en FotoRall, por favor rellena el siguiente formulario:</h2>
-        <form class="row g-3" (submit)="registrarUsuario($event)">
-          <div class="col-6">
-            <label for="nombreInput" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="nombreInput" [(ngModel)]="nombre" name="nombre" placeholder="Nombre" required>
+  <div class="join">
+    <div class="formulario">
+      <h2>Nos alegra que te interese participar en FotoRall, por favor rellena el siguiente formulario:</h2>
+      <form class="row g-3" (ngSubmit)="registrarUsuario($event)" #form="ngForm" novalidate>
+        <div class="col-6">
+          <label for="nombreInput" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="nombreInput"
+                 [(ngModel)]="nombre" name="nombre" required #nombreInput="ngModel">
+          <div class="text-danger" *ngIf="nombreInput.touched && nombre.length <= 1">
+            El nombre debe tener más de un carácter.
           </div>
-          <div class="col-6">
-            <label for="emailInput" class="form-label">Email</label>
-            <input type="email" class="form-control" id="emailInput" [(ngModel)]="email" name="email" placeholder="Correo electrónico" required>
+        </div>
+      
+        <div class="col-6">
+          <label for="emailInput" class="form-label">Email</label>
+          <input type="email" class="form-control" id="emailInput"
+                 [(ngModel)]="email" name="email" required email #emailInput="ngModel">
+          <div class="text-danger" *ngIf="emailInput.touched && emailInput.invalid">
+            Introduce un correo válido.
           </div>
-          <div class="col-12">
-            <label for="inputPassword" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" id="inputPassword" [(ngModel)]="password" name="password" placeholder="Contraseña" required>
+        </div>
+      
+        <div class="col-12">
+          <label for="inputPassword" class="form-label">Contraseña</label>
+          <input type="password" class="form-control" id="inputPassword"
+                 [(ngModel)]="password" name="password" required #passwordInput="ngModel">
+          <div class="text-danger" *ngIf="passwordInput.touched && password.length < 4">
+            La contraseña debe tener al menos 4 caracteres.
           </div>
-  
-          <div class="col-12">
-            <input type="checkbox" class="form-check-input" id="check" [(ngModel)]="terminosCondiciones" name="terminosCondiciones" required>
-            <label class="form-check-label" for="check">Acepto los términos y condiciones</label>
+        </div>
+      
+        <div class="col-12">
+          <input type="checkbox" class="form-check-input" id="check" [(ngModel)]="terminosCondiciones" name="terminosCondiciones">
+          <label class="form-check-label" for="check">Acepto los términos y condiciones</label>
+          <div class="text-danger" *ngIf="formularioEnviado && !terminosCondiciones">
+            Debes aceptar los términos y condiciones
           </div>
-  
-          <div class="col-12">
-            <button type="submit" class="btn btn-primary">Regístrate</button>
-          </div>
-        </form>
-      </div>
+        </div>
+        
+      
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Regístrate</button>
+        </div>
+      </form>
     </div>
   </div>
-  
+</div>

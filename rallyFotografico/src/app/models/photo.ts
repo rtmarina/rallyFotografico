@@ -5,4 +5,6 @@ export interface Photo {
     estado?: 'pendiente' | 'admitida' | 'rechazada';
     fecha_subida?: string;
     base64: string;
+    likes?: number;
 }
+

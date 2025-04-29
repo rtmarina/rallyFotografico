@@ -101,6 +101,22 @@ export class UserMisfotosComponent {
   }
 
   deletePhoto(id: number, url: string) {
-    alert('Función eliminar aún no implementada');
+    if (!confirm('¿Estás seguro de que quieres eliminar esta foto?')) return;
+  
+    this.userService.eliminarFoto(id).subscribe({
+      next: (res) => {
+        if (res.success) {
+          alert('Foto eliminada correctamente');
+          this.cargarFotos(); // Actualiza la lista
+        } else {
+          alert('Error al eliminar la foto: ' + res.error);
+        }
+      },
+      error: (err) => {
+        console.error('Error al eliminar la foto:', err);
+        alert('Hubo un error al eliminar la foto');
+      }
+    });
   }
+  
 }

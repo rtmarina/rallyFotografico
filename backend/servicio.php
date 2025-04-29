@@ -3,7 +3,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
-
 // Permitir solicitudes preflight (CORS)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header("Access-Control-Allow-Origin: *");
@@ -21,13 +20,16 @@ if ($mysqli->connect_error) {
 
 // Verifica si se hace una petición GET y si es para listar archivos
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['peticion']) && $_GET['peticion'] === 'listarArchivos') {
-    $imagenes = array_diff(scandir("imagenes/"), array(".", "..")); // Lee archivos de la carpeta
-    echo json_encode(["imagenes" => array_values($imagenes)]);
+    $imagenes = listarArchivosDesdeBaseDeDatos();
+    echo json_encode(['imagenes' => $imagenes]);
     exit;
 }
 
 $datos = file_get_contents('php://input');
 $objeto = json_decode($datos);
+
+// $objeto = new stdClass();
+// $objeto -> servicio = "listarUsuarios";
 
 // Verificar la petición POST
 // Verifica si se hace una petición POST y si es para crear un archivo
@@ -70,15 +72,25 @@ if ($objeto != null && isset($objeto->servicio)) {
             echo json_encode(listadoUsuarios());
             break;
         case "iniciarSesion":
-            echo iniciarSesion($objeto->email, $objeto->password);
+            echo json_encode(iniciarSesion($objeto->email, $objeto->password));
             break;
         case "registrarImagen":
             registrarImagen($objeto);
             echo json_encode(['success' => true, 'mensaje' => 'Imagen registrada correctamente']);
             break;
-            case "listarFotosPorUsuario":
-                echo json_encode(listarFotosPorUsuario($objeto->usuario_id));
-                break;
+        case "listarFotosPorUsuario":
+            echo json_encode(listarFotosPorUsuario($objeto->usuario_id));
+            break;
+        case "eliminarFoto":
+            echo json_encode(eliminarFoto($objeto->id));
+            break;
+        case "actualizarLikes":
+            echo json_encode(actualizarLikes($objeto->id));
+            break;
+        case "listarArchivos":
+            $imagenes = listarArchivosDesdeBaseDeDatos();
+            echo json_encode(['imagenes' => $imagenes]);
+            break;
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
     }
@@ -136,20 +148,20 @@ function iniciarSesion($email, $password) {
         if ($res->num_rows === 1) {
             $usuario = $res->fetch_assoc();
             if ($usuario['password'] === $password) {
-                unset($usuario['password']); // Elimina la contraseña antes de devolver los datos
-                return json_encode(['success' => true, 'usuario' => $usuario]);
+                unset($usuario['password']);
+                return ['success' => true, 'usuario' => $usuario];
             } else {
-                return json_encode(['success' => false, 'error' => 'Contraseña incorrecta']);
+                return ['success' => false, 'error' => 'Contraseña incorrecta'];
             }
         } else {
-            return json_encode(['success' => false, 'error' => 'Usuario no encontrado']);
+            return ['success' => false, 'error' => 'Usuario no encontrado'];
         }
     } catch (Exception $e) {
-        return json_encode(['success' => false, 'error' => $e->getMessage()]);
+        return ['success' => false, 'error' => $e->getMessage()];
     }
 }
 
-//IMAGENES
+// IMÁGENES
 
 function registrarImagen($objeto){
     global $mysqli;
@@ -177,135 +189,59 @@ function listarFotosPorUsuario($usuario_id) {
     }
 }
 
+function eliminarFoto($id) {
+    global $mysqli;
+    try {
+        $sql = "DELETE FROM fotografias WHERE id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $id);
+        if ($stmt->execute()) {
+            return ['success' => true, 'mensaje' => 'Foto eliminada correctamente'];
+        } else {
+            return ['success' => false, 'error' => 'No se pudo eliminar la foto'];
+        }
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
 
+function actualizarLikes($foto_id) {
+    global $mysqli;
+    try {
+        $sql = "UPDATE fotografias SET likes = likes + 1 WHERE id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $foto_id);
+        $stmt->execute();
+        return ['success' => true, 'mensaje' => 'Like actualizado'];
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
 
-
-
-
-
-
-
-//SERVICIO IMAGENES
-
-// // Carpeta donde se guardan las imágenes
-// $carpeta = __DIR__ . "/imagenes";
-
-// // Lógica principal
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['peticion'])) {
-//     switch ($_POST['peticion']) {
-//         case 'crearArchivo':
-//             crearArchivo($carpeta);
-//             break;
-//         default:
-//             echo json_encode(["error" => "Operación no reconocida"]);
-//             break;
-//     }
-// } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['peticion'])) {
-//     switch ($_GET['peticion']) {
-//         case 'listarArchivos':
-//             listarArchivos($carpeta);
-//             break;
-//         default:
-//             echo json_encode(["error" => "Operación no reconocida"]);
-//             break;
-//     }
-// } elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-//     parse_str(file_get_contents("php://input"), $put_vars);
-//     renombrarArchivo($put_vars, $carpeta);
-// } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-//     parse_str(file_get_contents("php://input"), $delete_vars);
-//     eliminarArchivo($delete_vars, $carpeta);
-// } else {
-//     echo json_encode(["error" => "Método no permitido"]);
-// }
-
-// // Funciones
-// function crearArchivo($carpeta) {
-//     if (isset($_FILES['archivo'])) {
-//         if (!file_exists($carpeta)) {
-//             mkdir($carpeta, 0777, true);
-//         }
-
-//         $nombreOriginal = basename($_FILES['archivo']['name']);
-//         $rutaDestino = $carpeta . '/' . $nombreOriginal;
-
-//         // Validaciones
-//         $tiposPermitidos = ['image/jpeg', 'image/png'];
-//         if (!in_array($_FILES['archivo']['type'], $tiposPermitidos)) {
-//             echo json_encode(["error" => "Tipo de archivo no permitido"]);
-//             return;
-//         }
-
-//         $tamañoMaximo = 2 * 1024 * 1024; // 2 MB
-//         if ($_FILES['archivo']['size'] > $tamañoMaximo) {
-//             echo json_encode(["error" => "El archivo excede el tamaño permitido"]);
-//             return;
-//         }
-
-//         if (move_uploaded_file($_FILES['archivo']['tmp_name'], $rutaDestino)) {
-//             echo json_encode(["mensaje" => "Archivo subido con éxito", "ruta" => $rutaDestino]);
-//         } else {
-//             echo json_encode(["error" => "Error al guardar el archivo"]);
-//         }
-//     } else {
-//         echo json_encode(["error" => "No se recibió un archivo"]);
-//     }
-// }
-
-// function listarArchivos($carpeta) {
-//     if (file_exists($carpeta)) {
-//         $archivos = scandir($carpeta);
-//         $imagenes = array_filter($archivos, function ($archivo) use ($carpeta) {
-//             return is_file($carpeta . '/' . $archivo);
-//         });
-//         echo json_encode(["imagenes" => array_values($imagenes)]);
-//     } else {
-//         echo json_encode(["error" => "No se encontraron imágenes"]);
-//     }
-// }
-
-// function renombrarArchivo($put_vars, $carpeta) {
-//     if (isset($put_vars["archivoAntiguo"]) && isset($put_vars["archivoNuevo"])) {
-//         $archivoAntiguo = $carpeta . '/' . $put_vars["archivoAntiguo"];
-//         $archivoNuevo = $carpeta . '/' . $put_vars["archivoNuevo"];
-
-//         if (file_exists($archivoAntiguo)) {
-//             if (rename($archivoAntiguo, $archivoNuevo)) {
-//                 echo json_encode(["mensaje" => "Archivo renombrado con éxito"]);
-//             } else {
-//                 echo json_encode(["error" => "No se pudo renombrar el archivo"]);
-//             }
-//         } else {
-//             echo json_encode(["error" => "Archivo no encontrado"]);
-//         }
-//     } else {
-//         echo json_encode(["error" => "Parámetros incompletos"]);
-//     }
-// }
-
-// function eliminarArchivo($delete_vars, $carpeta) {
-//     // Ahora se toma el parámetro 'archivo' desde la URL (no desde el cuerpo)
-//     if (isset($_GET['archivo'])) {
-//         $archivo = $carpeta . '/' . trim(basename($_GET['archivo']));
-
-//         // Depuración adicional
-//         error_log("Archivo recibido para eliminar: " . $_GET['archivo']);
-//         error_log("Ruta construida: " . $archivo);
-
-//         if (file_exists($archivo)) {
-//             if (unlink($archivo)) {
-//                 echo json_encode(["mensaje" => "Archivo eliminado con éxito"]);
-//             } else {
-//                 error_log("⚠️ No se pudo eliminar el archivo: " . $archivo);
-//                 echo json_encode(["error" => "No se pudo eliminar el archivo"]);
-//             }
-//         } else {
-//             error_log("❌ Archivo no encontrado: " . $archivo);
-//             echo json_encode(["error" => "Archivo no encontrado"]);
-//         }
-//     } else {
-//         error_log("❌ Parámetro 'archivo' no proporcionado");
-//         echo json_encode(["error" => "Parámetro 'archivo' es requerido"]);
-//     }
-// }
-
+// Función para listar archivos desde la base de datos
+function listarArchivosDesdeBaseDeDatos() {
+    global $mysqli;
+    try {
+        // Consulta para obtener todas las imágenes desde la base de datos
+        $sql = "SELECT id, nombre, base64, likes FROM fotografias ORDER BY id DESC";
+        $stm = $mysqli->prepare($sql);
+        $stm->execute();
+        $result = $stm->get_result();
+        
+        // Almacena las imágenes en un arreglo
+        $imagenes = [];
+        while ($row = $result->fetch_assoc()) {
+            $imagenes[] = [
+                'id' => $row['id'],
+                'nombre' => $row['nombre'],
+                'base64' => $row['base64'],
+                'likes' => $row['likes'],
+            ];
+        }
+        
+        return $imagenes;
+    } catch (Exception $e) {
+        return ["error" => $e->getMessage()];
+    }
+}
+?>

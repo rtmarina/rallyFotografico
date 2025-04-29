@@ -18,14 +18,17 @@ export class UserParticipateComponent {
   email: string = '';
   password: string = '';
   terminosCondiciones: boolean = false;
+  formularioEnviado: boolean = false;
 
   constructor(private adminService: AdminServiceService, private router: Router) {}
 
   registrarUsuario(event: Event) {
+    event.preventDefault(); // importante para evitar recarga
+
+    this.formularioEnviado = true;
 
     if (!this.terminosCondiciones) {
-      alert('Debes aceptar los términos y condiciones.');
-      return;
+      return; // No continuar hasta que los acepte
     }
 
     const usuario = {
@@ -38,11 +41,11 @@ export class UserParticipateComponent {
       next: (datos) => {
         console.log('Usuario registrado correctamente:', datos);
         alert('Usuario registrado con éxito');
-        // Limpiar formulario después del registro
         this.nombre = '';
         this.email = '';
         this.password = '';
         this.terminosCondiciones = false;
+        this.formularioEnviado = false;
         this.router.navigate(['/']);
       },
       error: (error) => {

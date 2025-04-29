@@ -11,32 +11,41 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   iniciarSesion( email: string, password: string ) {
-    const payload = {
+    const cuerpo = {
       servicio: 'iniciarSesion',
       email: email,
       password: password
     };
-    return this.http.post(this.url, payload);
+    return this.http.post(this.url, cuerpo);
   }
 
   // Guardar imagen Base64 en la base de datos
 registrarImagen(usuario_id: number, nombre: string, base64: string): Observable<any> {
-  const payload = {
+  const cuerpo = {
     servicio: 'registrarImagen',
     usuario_id,
     nombre,
     base64
   };
-  return this.http.post(this.url, payload);
+  return this.http.post(this.url, cuerpo);
 }
 
 // Obtener imágenes del usuario
 listarFotosPorUsuario(usuario_id: number): Observable<any> {
-  const payload = {
+  const cuerpo = {
     servicio: 'listarFotosPorUsuario',
     usuario_id: usuario_id
   };
-  return this.http.post(this.url, payload);
+  return this.http.post(this.url, cuerpo);
 }
+
+eliminarFoto(id: number): Observable<any> {
+  const cuerpo = {
+    servicio: 'eliminarFoto',
+    id: id
+  };
+  return this.http.post(this.url, cuerpo);
+}
+
 
 }
