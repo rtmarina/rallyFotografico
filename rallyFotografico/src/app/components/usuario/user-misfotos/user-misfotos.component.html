@@ -18,13 +18,22 @@
           class="col-md-4 col-sm-6 col-12">
           <div class="photo-card">
             <img [src]="photo.url" alt="Foto"> 
-            <div class="actions">
-                <!-- dar funcionalidad a los botones -->
-                <button (click)="deletePhoto(photo.id, photo.url)">
-                    Eliminar
-                </button>
+          
+            <div *ngIf="photo.editando">
+              <input [(ngModel)]="photo.nuevoNombre" class="form-control form-control-sm mt-2 mb-2" />
+              <button class="btn btn-primary btn-sm" (click)="guardarNombre(photo)">Guardar</button>
+              <button class="btn btn-secondary btn-sm" (click)="cancelarEdicion(photo)">Cancelar</button>
+            </div>
+          
+            <div *ngIf="!photo.editando">
+              <p>{{ photo.nombre }}</p>
+              <div class="btn-group">
+                <button class="btn btn-outline-secondary btn-sm" (click)="editarNombre(photo)">Modificar nombre</button>
+                <button class="btn btn-danger btn-sm" (click)="deletePhoto(photo.id, photo.url)">Eliminar</button>
+              </div>
             </div>
           </div>
+          
         </div>
       </div>
     

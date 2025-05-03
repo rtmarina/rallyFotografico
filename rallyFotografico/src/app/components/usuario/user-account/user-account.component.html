@@ -1,13 +1,51 @@
-<div class="container mt-4" *ngIf="usuario; else noLogueado">
-    <h2>Bienvenido, {{ usuario.nombre }}</h2>
-    <p><strong>Email:</strong> {{ usuario.email }}</p>
-    <p><strong>ID:</strong> {{ usuario.id }}</p>
-    <button (click)="cerrarSesion()" class="btn-cerrar">Cerrar sesión</button>
-  </div>
-  
-  <ng-template #noLogueado>
-    <div class="container mt-4 no-login">
-      <h2>Por favor, inicie sesión para ver su cuenta.</h2>
+<div class="account-container" *ngIf="usuario; else noLogueado">
+  <div class="account-card">
+    <div class="avatar">
+      <div class="avatar-circle">{{ usuario.nombre.charAt(0).toUpperCase() }}</div>
     </div>
-  </ng-template>
-  
+
+    <h2>{{ usuario.nombre }}</h2>
+    <p><strong>Email:</strong> {{ usuario.email }}</p>
+    <p><strong>Usuario ID:</strong> {{ usuario.id }}</p>
+    <p><strong>Rol:</strong> {{ usuario.rol || 'participante' }}</p>
+    <p><strong>Fecha de registro:</strong> {{ usuario.fecha_registro || 'Desconocida' }}</p>
+
+    <div class="activity-summary">
+      <p><strong>Fotos subidas:</strong> {{ usuario.fotosSubidas || 0 }}</p>
+      <p><strong>Votos recibidos:</strong> {{ usuario.votosRecibidos || 0 }}</p>
+    </div>
+
+    <button class="btn" (click)="editar = !editar">
+      {{ editar ? 'Cancelar' : 'Modificar datos' }}
+    </button>
+
+    <form *ngIf="editar" (ngSubmit)="guardarCambios()" #form="ngForm" class="edit-form mt-3">
+      <div class="form-group">
+        <label>Nombre</label>
+        <input [(ngModel)]="usuario.nombre" name="nombre" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input [(ngModel)]="usuario.email" name="email" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input [(ngModel)]="usuario.password" name="password" type="password" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-success">Guardar cambios</button>
+    </form>
+
+    <hr>
+
+    <button class="btn btn-outline-primary" (click)="cambiarContrasena()">Cambiar contraseña</button>
+    <button class="btn btn-outline-danger" (click)="eliminarCuenta()">Eliminar cuenta</button>
+
+    <button (click)="cerrarSesion()" class="btn btn-cerrar">Cerrar sesión</button>
+  </div>
+</div>
+
+<ng-template #noLogueado>
+  <div class="container mt-4 no-login">
+    <h2>Por favor, inicie sesión para ver su cuenta.</h2>
+  </div>
+</ng-template>

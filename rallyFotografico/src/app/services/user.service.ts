@@ -19,6 +19,25 @@ export class UserService {
     return this.http.post(this.url, cuerpo);
   }
 
+  actualizarUsuario(usuario: any): Observable<any> {
+    const cuerpo = {
+      servicio: 'actualizarUsuario',
+      id: usuario.id,
+      nombre: usuario.nombre,
+      email: usuario.email,
+      password: usuario.password
+    };
+    return this.http.post(this.url, cuerpo);
+  }
+
+  eliminarUsuario(id: number): Observable<any> {
+    const cuerpo = {
+      servicio: 'eliminarUsuario',
+      id: id
+    };
+    return this.http.post(this.url, cuerpo);
+  }
+
   // Guardar imagen Base64 en la base de datos
 registrarImagen(usuario_id: number, nombre: string, base64: string): Observable<any> {
   const cuerpo = {
@@ -47,5 +66,13 @@ eliminarFoto(id: number): Observable<any> {
   return this.http.post(this.url, cuerpo);
 }
 
+actualizarNombreFoto(id: number, nuevoNombre: string): Observable<any> {
+  const cuerpo = {
+    servicio: 'actualizarNombreFoto',
+    id: id,
+    nuevoNombre: nuevoNombre
+  };
+  return this.http.post(this.url, cuerpo);
+}
 
 }

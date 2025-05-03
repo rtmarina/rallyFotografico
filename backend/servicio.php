@@ -74,6 +74,12 @@ if ($objeto != null && isset($objeto->servicio)) {
         case "iniciarSesion":
             echo json_encode(iniciarSesion($objeto->email, $objeto->password));
             break;
+        case "actualizarUsuario":
+            echo json_encode(actualizarUsuario($objeto));
+            break;
+        case "eliminarUsuario":
+            echo json_encode(eliminarUsuario($objeto->id));
+            break;
         case "registrarImagen":
             registrarImagen($objeto);
             echo json_encode(['success' => true, 'mensaje' => 'Imagen registrada correctamente']);
@@ -91,6 +97,10 @@ if ($objeto != null && isset($objeto->servicio)) {
             $imagenes = listarArchivosDesdeBaseDeDatos();
             echo json_encode(['imagenes' => $imagenes]);
             break;
+        case "actualizarNombreFoto":
+            echo json_encode(actualizarNombreFoto($objeto->id, $objeto->nuevoNombre));
+            break;
+            
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
     }
@@ -160,6 +170,49 @@ function iniciarSesion($email, $password) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+
+function actualizarUsuario($objeto) {
+    global $mysqli;
+    try {
+        $sql = "UPDATE usuarios SET nombre = ?, email = ?, password = ? WHERE id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("sssi", $objeto->nombre, $objeto->email, $objeto->password, $objeto->id);
+        if ($stmt->execute()) {
+            return ['success' => true, 'mensaje' => 'Usuario actualizado'];
+        } else {
+            return ['success' => false, 'error' => 'No se pudo actualizar el usuario'];
+        }
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+function eliminarUsuario($id) {
+    global $mysqli;
+    try {
+        // Eliminar fotos relacionadas con el usuario (si es necesario)
+        $sqlFotos = "DELETE FROM fotografias WHERE usuario_id = ?";
+        $stmtFotos = $mysqli->prepare($sqlFotos);
+        $stmtFotos->bind_param("i", $id);
+        $stmtFotos->execute();
+
+        // Eliminar el usuario de la tabla de usuarios
+        $sqlUsuario = "DELETE FROM usuarios WHERE id = ?";
+        $stmtUsuario = $mysqli->prepare($sqlUsuario);
+        $stmtUsuario->bind_param("i", $id);
+        $stmtUsuario->execute();
+
+        // Verificar si se eliminó algún registro
+        if ($stmtUsuario->affected_rows > 0) {
+            return ['success' => true, 'mensaje' => 'Cuenta eliminada correctamente.'];
+        } else {
+            return ['success' => false, 'error' => 'No se encontró el usuario o no se pudo eliminar.'];
+        }
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
 
 // IMÁGENES
 
@@ -244,4 +297,21 @@ function listarArchivosDesdeBaseDeDatos() {
         return ["error" => $e->getMessage()];
     }
 }
+
+function actualizarNombreFoto($id, $nuevoNombre) {
+    global $mysqli;
+    try {
+        $sql = "UPDATE fotografias SET nombre = ? WHERE id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("si", $nuevoNombre, $id);
+        if ($stmt->execute()) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'error' => 'No se pudo actualizar el nombre'];
+        }
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
 ?>

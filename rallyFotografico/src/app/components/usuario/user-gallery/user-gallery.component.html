@@ -5,6 +5,7 @@
 <body>
   <div class="fondo">
     <div class="container">
+      <h1>Galería de imagenes</h1>
       <div class="row">
         <!-- Mostrar las fotos en tarjetas con tamaño uniforme -->
         <div *ngFor="let photo of photos | paginate: { itemsPerPage: 6, currentPage: currentPage }" class="col-md-4 d-flex justify-content-center">

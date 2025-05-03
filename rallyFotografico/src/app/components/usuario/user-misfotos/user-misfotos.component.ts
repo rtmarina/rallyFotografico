@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { UserService } from '../../../services/user.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-misfotos',
   standalone: true,
-  imports: [CommonModule, NgxPaginationModule],
+  imports: [CommonModule, NgxPaginationModule, FormsModule],
   templateUrl: './user-misfotos.component.html',
   styleUrls: ['./user-misfotos.component.css']
 })
@@ -118,5 +119,39 @@ export class UserMisfotosComponent {
       }
     });
   }
+
+  editarNombre(photo: any) {
+    photo.editando = true;
+    photo.nuevoNombre = photo.nombre;
+  }
+  
+  cancelarEdicion(photo: any) {
+    photo.editando = false;
+  }
+  
+  guardarNombre(photo: any) {
+    if (!photo.nuevoNombre || photo.nuevoNombre.trim() === '') {
+      alert('El nuevo nombre no puede estar vacío.');
+      return;
+    }
+  
+    this.userService.actualizarNombreFoto(photo.id, photo.nuevoNombre)
+      .subscribe({
+        next: res => {
+          if (res.success) {
+            photo.nombre = photo.nuevoNombre;
+            photo.editando = false;
+            alert('Nombre actualizado con éxito.');
+          } else {
+            alert('Error al actualizar el nombre: ' + res.error);
+          }
+        },
+        error: err => {
+          console.error('Error al actualizar el nombre:', err);
+          alert('Hubo un error al actualizar el nombre');
+        }
+      });
+  }
+  
   
 }
