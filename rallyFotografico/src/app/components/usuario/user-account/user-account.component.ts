@@ -15,7 +15,9 @@ import { FormsModule } from '@angular/forms';
 export class UserAccountComponent implements OnInit {
   usuario: any = null;
   editar: boolean = false;
-
+  mostrarFormularioPassword: boolean = false;
+  nuevaPassword: string = '';
+  confirmarPassword: string = '';
 
   constructor(private router: Router, private userService: UserService) {
     this.usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -32,39 +34,49 @@ export class UserAccountComponent implements OnInit {
   }
 
   guardarCambios() {
-    this.userService.actualizarUsuario(this.usuario).subscribe(res => {
+    const datosActualizados = {
+      id: this.usuario.id,
+      nombre: this.usuario.nombre,
+      email: this.usuario.email
+    };
+  
+    this.userService.actualizarUsuario(datosActualizados).subscribe(res => {
       if (res.success) {
         alert('Datos actualizados correctamente');
         localStorage.setItem('usuario', JSON.stringify(this.usuario));
+        this.editar = false;
       } else {
         alert('Error al actualizar: ' + res.error);
       }
     });
   }
+  
 
   cambiarContrasena() {
-    const nueva = prompt("Introduce la nueva contraseña:");
-    const confirmar = prompt("Confirma la nueva contraseña:");
-  
-    if (nueva && confirmar) {
-      if (nueva === confirmar) {
-        this.usuario.password = nueva;
-        this.userService.actualizarUsuario(this.usuario).subscribe(res => {
-          if (res.success) {
-            alert("Contraseña actualizada correctamente.");
-            localStorage.setItem('usuario', JSON.stringify(this.usuario));
-          } else {
-            alert("Error al actualizar: " + res.error);
-          }
-        });
-      } else {
-        alert("Las contraseñas no coinciden.");
-      }
-    } else {
+    if (!this.nuevaPassword || !this.confirmarPassword) {
       alert("Debes rellenar ambos campos.");
+      return;
     }
+
+    if (this.nuevaPassword !== this.confirmarPassword) {
+      alert("Las contraseñas no coinciden.");
+      return;
+    }
+
+    this.usuario.password = this.nuevaPassword;
+    this.userService.actualizarUsuario(this.usuario).subscribe(res => {
+      if (res.success) {
+        alert("Contraseña actualizada correctamente.");
+        localStorage.setItem('usuario', JSON.stringify(this.usuario));
+        this.mostrarFormularioPassword = false;
+        this.nuevaPassword = '';
+        this.confirmarPassword = '';
+      } else {
+        alert("Error al actualizar: " + res.error);
+      }
+    });
   }
-  
+
   eliminarCuenta() {
     const confirmar = confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
   
@@ -80,5 +92,8 @@ export class UserAccountComponent implements OnInit {
       });
     }
   }
+
+  
+  
   
 }

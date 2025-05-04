@@ -100,7 +100,7 @@ if ($objeto != null && isset($objeto->servicio)) {
         case "actualizarNombreFoto":
             echo json_encode(actualizarNombreFoto($objeto->id, $objeto->nuevoNombre));
             break;
-            
+
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
     }
@@ -149,7 +149,7 @@ function borrarUsuario($id){
 function iniciarSesion($email, $password) {
     global $mysqli;
     try {
-        $sql = "SELECT id, nombre, email, password, rol FROM usuarios WHERE email = ?";
+        $sql = "SELECT id, nombre, email, password, rol, fecha_registro FROM usuarios WHERE email = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -174,18 +174,26 @@ function iniciarSesion($email, $password) {
 function actualizarUsuario($objeto) {
     global $mysqli;
     try {
-        $sql = "UPDATE usuarios SET nombre = ?, email = ?, password = ? WHERE id = ?";
-        $stmt = $mysqli->prepare($sql);
-        $stmt->bind_param("sssi", $objeto->nombre, $objeto->email, $objeto->password, $objeto->id);
+        if (isset($objeto->password) && !empty($objeto->password)) {
+            $sql = "UPDATE usuarios SET nombre = ?, email = ?, password = ? WHERE id = ?";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("sssi", $objeto->nombre, $objeto->email, $objeto->password, $objeto->id);
+        } else {
+            $sql = "UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("ssi", $objeto->nombre, $objeto->email, $objeto->id);
+        }
+
         if ($stmt->execute()) {
             return ['success' => true, 'mensaje' => 'Usuario actualizado'];
         } else {
-            return ['success' => false, 'error' => 'No se pudo actualizar el usuario'];
+            return ['success' => false, 'error' => 'No se pudo actualizar'];
         }
     } catch (Exception $e) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+
 
 function eliminarUsuario($id) {
     global $mysqli;
@@ -213,20 +221,43 @@ function eliminarUsuario($id) {
     }
 }
 
+function obtenerFotosSubidas($usuario_id) {
+    global $mysqli;
+    try {
+        $sql = "SELECT COUNT(*) AS fotosSubidas FROM fotografias WHERE usuario_id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $usuario_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        return $data['fotosSubidas'] ?? 0;
+    } catch (Exception $e) {
+        return 0; // Si hay un error, devolver 0 fotos subidas
+    }
+}
+
+
 
 // IMÁGENES
 
-function registrarImagen($objeto){
+function registrarImagen($objeto) {
     global $mysqli;
     try {
         $sql = "INSERT INTO fotografias (usuario_id, nombre, base64) VALUES (?, ?, ?)";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("iss", $objeto->usuario_id, $objeto->nombre, $objeto->base64);
         $stmt->execute();
+        
+        // Respuesta exitosa
+        echo json_encode(['success' => true, 'mensaje' => 'Imagen registrada correctamente']);
     } catch (Exception $e) {
+        // Si ocurre un error, devuelve un error en formato JSON
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
+    exit(); // Asegura que no se envíen más datos al cliente
 }
+
+
 
 function listarFotosPorUsuario($usuario_id) {
     global $mysqli;
@@ -314,4 +345,3 @@ function actualizarNombreFoto($id, $nuevoNombre) {
     }
 }
 
-?>

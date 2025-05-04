@@ -1,8 +1,31 @@
 <div class="account-container" *ngIf="usuario; else noLogueado">
   <div class="account-card">
-    <div class="avatar">
-      <div class="avatar-circle">{{ usuario.nombre.charAt(0).toUpperCase() }}</div>
+    <div class="avatar text-center mb-3">
+      <div class="position-relative d-inline-block">
+        <img
+          [src]="usuario.imagen_perfil"
+          alt="Foto de perfil"
+          class="rounded-circle border"
+          width="120"
+          height="120"
+        />
+        <span
+          class="position-absolute bottom-0 end-0 bg-light border rounded-circle p-1"
+          style="cursor: pointer"
+          (click)="fileInput.click()"
+        >
+          ✏️
+        </span>
+        <input
+          type="file"
+          #fileInput
+          class="d-none"
+          
+          accept="image/*"
+        />
+      </div>
     </div>
+    
 
     <h2>{{ usuario.nombre }}</h2>
     <p><strong>Email:</strong> {{ usuario.email }}</p>
@@ -15,7 +38,7 @@
       <p><strong>Votos recibidos:</strong> {{ usuario.votosRecibidos || 0 }}</p>
     </div>
 
-    <button class="btn" (click)="editar = !editar">
+    <button class="btn btn-outline-primary"  (click)="editar = !editar">
       {{ editar ? 'Cancelar' : 'Modificar datos' }}
     </button>
 
@@ -28,16 +51,27 @@
         <label>Email</label>
         <input [(ngModel)]="usuario.email" name="email" class="form-control" required>
       </div>
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input [(ngModel)]="usuario.password" name="password" type="password" class="form-control" required>
-      </div>
       <button type="submit" class="btn btn-success">Guardar cambios</button>
     </form>
 
     <hr>
 
-    <button class="btn btn-outline-primary" (click)="cambiarContrasena()">Cambiar contraseña</button>
+    <button class="btn btn-outline-primary" (click)="mostrarFormularioPassword = !mostrarFormularioPassword">
+      {{ mostrarFormularioPassword ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña' }}
+    </button>
+    
+    <form *ngIf="mostrarFormularioPassword" (ngSubmit)="cambiarContrasena()" class="mt-3">
+      <div class="form-group">
+        <label>Nueva contraseña</label>
+        <input type="password" class="form-control" [(ngModel)]="nuevaPassword" name="nuevaPassword" required>
+      </div>
+      <div class="form-group">
+        <label>Confirmar contraseña</label>
+        <input type="password" class="form-control" [(ngModel)]="confirmarPassword" name="confirmarPassword" required>
+      </div>
+      <button type="submit" class="btn btn-success mt-2">Actualizar contraseña</button>
+    </form>
+    
     <button class="btn btn-outline-danger" (click)="eliminarCuenta()">Eliminar cuenta</button>
 
     <button (click)="cerrarSesion()" class="btn btn-cerrar">Cerrar sesión</button>

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private url: string = "http://localhost/rallyFotografico/backend/servicio.php";
+  private url = "http://localhost/rallyFotografico/backend/servicio.php";
 
   constructor(private http: HttpClient) {}
 
@@ -20,15 +20,21 @@ export class UserService {
   }
 
   actualizarUsuario(usuario: any): Observable<any> {
-    const cuerpo = {
+    const cuerpo: any = {
       servicio: 'actualizarUsuario',
       id: usuario.id,
       nombre: usuario.nombre,
-      email: usuario.email,
-      password: usuario.password
+      email: usuario.email
     };
+  
+    // Solo incluir la contraseña si está presente (al cambiarla)
+    if (usuario.password) {
+      cuerpo.password = usuario.password;
+    }
+  
     return this.http.post(this.url, cuerpo);
   }
+  
 
   eliminarUsuario(id: number): Observable<any> {
     const cuerpo = {
@@ -37,6 +43,9 @@ export class UserService {
     };
     return this.http.post(this.url, cuerpo);
   }
+
+  
+  
 
   // Guardar imagen Base64 en la base de datos
 registrarImagen(usuario_id: number, nombre: string, base64: string): Observable<any> {

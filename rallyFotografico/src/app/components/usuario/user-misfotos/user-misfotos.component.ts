@@ -52,14 +52,15 @@ export class UserMisfotosComponent {
       alert('Por favor selecciona una imagen antes de continuar.');
       return;
     }
-
+  
     this.userService.registrarImagen(this.usuario.id, this.nombreArchivo, this.imagen64)
       .subscribe({
-        next: res => {
+        next: (res: any) => {
           if (res.success) {
             console.log('Imagen subida con éxito:', res);
             alert('Imagen subida con éxito.');
           } else {
+            console.error('Error al subir la imagen:', res.error);
             alert('Error al subir la imagen: ' + res.error);
           }
         },
@@ -68,12 +69,13 @@ export class UserMisfotosComponent {
           this.imagen64 = ''; // Limpiar el campo de imagen
           this.nombreArchivo = ''; // Limpiar el nombre del archivo
         },
-        error: err => {
+        error: (err: any) => {
           console.error('Error al subir imagen:', err);
           alert('Hubo un error al subir la imagen.');
         }
       });
   }
+  
 
   cargarFotos() {
     if (!this.usuario) {
