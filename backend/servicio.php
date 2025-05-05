@@ -67,10 +67,6 @@ if ($objeto != null && isset($objeto->servicio)) {
             crearUsuario($objeto);
             echo json_encode(listadoUsuarios());
             break;
-        case "borrarUsuario":
-            borrarUsuario($objeto);
-            echo json_encode(listadoUsuarios());
-            break;
         case "iniciarSesion":
             echo json_encode(iniciarSesion($objeto->email, $objeto->password));
             break;
@@ -133,19 +129,6 @@ function crearUsuario($objeto){
         return false;
     }
 }
-
-function borrarUsuario($id){
-    global $conn;
-    try {
-        $sql = "delete from usuarios where id = ?";  
-        $conn->prepare($sql)->execute(array($id));
-        return true;
-    } catch (Exception $e) {
-        die($e->getMessage());
-        return false;
-    }
-}
-
 function iniciarSesion($email, $password) {
     global $mysqli;
     try {

@@ -1,1 +1,61 @@
-<p>admin-usuarios works!</p>
+<div class="fondo">
+<section class="user-panel">
+    <header>
+      <h2>👥 Gestión de Usuarios</h2>
+      <p class="subtitle">Administra los usuarios de forma rápida y eficiente</p>
+    </header>
+  
+    <div class="card form-card">
+        <h3>Creacion de participantes</h3>
+      <form (submit)="editando ? actualizarUsuario(nuevoUsuario) : crearUsuario()" class="form">
+        <div class="input-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" [(ngModel)]="nuevoUsuario.nombre" name="nombre" required />
+        </div>
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" [(ngModel)]="nuevoUsuario.email" name="email" required />
+        </div>
+        <div class="input-group">
+          <label for="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="nuevoUsuario.password"
+            name="password"
+            [required]="!editando"
+          />
+        </div>
+  
+        <div class="btn-group">
+          <button type="submit" class="btn primary">{{ editando ? 'Actualizar' : 'Crear' }}</button>
+          <button *ngIf="editando" type="button" class="btn" (click)="cancelarEdicion()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  
+    <div class="card table-card">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th class="acciones">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of usuarios">
+            <td>{{ user.nombre }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+              <div class="btn-group">
+                <button class="btn outline" (click)="editar(user)">✏️</button>
+                <button class="btn outline" (click)="eliminarUsuario(user.id!)">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

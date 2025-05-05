@@ -50,6 +50,9 @@ html {
     background-color: #2f5a8d;
     padding: 10px;
     border-radius: 10px;
+    position: relative;
+    z-index: 1050;
+    width: 100%;
 }
 
 .navbar-collapse .nav-link {

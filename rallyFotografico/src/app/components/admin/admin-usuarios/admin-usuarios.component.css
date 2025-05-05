@@ -1,0 +1,144 @@
+.fondo{
+    background-image: url('/admin-crud.jpg');
+    background-size: cover;
+    background-position: center;
+}
+body {
+    font-family: 'Lexend', sans-serif;  
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .user-panel {
+    width: 90%;
+    max-width: 850px;
+    background: rgba(255, 255, 255, 0.507);
+    margin: auto;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  header {
+    text-align: center;
+    color: #276baf;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    font-size: 24px;
+    margin: 0;
+    color: #3f6c99;
+  }
+
+  .subtitle {
+    font-style: italic;
+    color: #4a73a1;
+  }
+  
+  .card {
+    background: #ffffff93;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 4px 4px 12px rgba(180, 145, 236, 0.973);
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .form-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .input-group {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 15px;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #35628f;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #82a3c891;
+    border-radius: 8px;
+    background: #e3f1fd;
+    color: #363434;
+  }
+  
+  .btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .btn {
+    padding: 10px 18px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  
+  .primary {
+    background: #668bb4;
+    color: white;
+  }
+  
+  .primary:hover {
+    background: #6b92b9;
+  }
+  
+  .table-card {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .user-table th, .user-table td {
+    padding: 12px;
+    border-bottom: 2px solid #b3d9f2;
+  }
+  
+  .user-table th {
+    background: #687cb4;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .user-table td {
+    text-align: center;
+  }
+  
+  .btn.outline {
+    background: transparent;
+    border: 2px solid #0042f759;
+    color: #82a3c8;
+  }
+  
+  .btn.outline:hover {
+    background: #0042f73a;
+    color: white;
+  }
+  

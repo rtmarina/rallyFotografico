@@ -20,7 +20,7 @@ export class AdminServiceService {
 
   public eliminarUser(id: number) {
     let cuerpo = JSON.stringify({
-      servicio: "borrarUsuario",
+      servicio: "eliminarUsuario",
       id: id
     });
     return this.http.post(this.url, cuerpo);
@@ -32,5 +32,13 @@ export class AdminServiceService {
   
     return this.http.post<Usuarios>(this.url, JSON.stringify(copia));
   }
+
+  public actualizarUser(usuario: Usuarios) {
+    let copia = JSON.parse(JSON.stringify(usuario));
+    copia.servicio = "actualizarUsuario";
+    
+    return this.http.post(this.url, JSON.stringify(copia));
+  }
+  
 
 }
