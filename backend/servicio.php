@@ -28,6 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['peticion']) && $_GET['p
 $datos = file_get_contents('php://input');
 $objeto = json_decode($datos);
 
+if ($objeto === null) {
+    http_response_code(400);
+    echo json_encode(["error" => "El JSON recibido es inválido"]);
+    exit;
+}
+
 // $objeto = new stdClass();
 // $objeto -> servicio = "listarUsuarios";
 
@@ -119,16 +125,56 @@ function listadoUsuarios(){
 
 function crearUsuario($objeto){
     global $mysqli;
-    try{
-        $sql = "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)";
-        $stm = $mysqli->prepare($sql) ->execute(
-            array($objeto->nombre, $objeto->email, $objeto->password));
-            return true;
-    } catch (Exception $e) {
-        die("Error: " . $e->getMessage());
-        return false;
+
+    // Validaciones básicas
+    if (!isset($objeto->nombre) || strlen(trim($objeto->nombre)) <= 1) {
+        http_response_code(400);
+        echo json_encode(["error" => "Nombre inválido"]);
+        exit;
     }
+
+    if (!isset($objeto->email) || !filter_var($objeto->email, FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode(["error" => "Email inválido"]);
+        exit;
+    }
+
+    if (!isset($objeto->password) || strlen($objeto->password) < 4) {
+        http_response_code(400);
+        echo json_encode(["error" => "Contraseña demasiado corta (mínimo 4 caracteres)"]);
+        exit;
+    }
+
+    // Comprobar si el email ya existe
+    $check = $mysqli->prepare("SELECT id FROM usuarios WHERE email = ?");
+    $check->bind_param("s", $objeto->email);
+    $check->execute();
+    $check->store_result();
+
+    if ($check->num_rows > 0) {
+        http_response_code(409); // Conflicto
+        echo json_encode(["error" => "El email ya está registrado"]);
+        exit;
+    }
+
+    // Cifrado seguro de contraseña
+
+$passwordSegura = password_hash($objeto->password, PASSWORD_DEFAULT);
+
+try {
+    $sql = "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("sss", $objeto->nombre, $objeto->email, $passwordSegura);
+    $stmt->execute();
+    return true;
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(["error" => "Error interno: " . $e->getMessage()]);
+    return false;
 }
+
+}
+
 function iniciarSesion($email, $password) {
     global $mysqli;
     try {
@@ -140,19 +186,33 @@ function iniciarSesion($email, $password) {
 
         if ($res->num_rows === 1) {
             $usuario = $res->fetch_assoc();
-            if ($usuario['password'] === $password) {
+
+            // Verificar si la contraseña está cifrada
+            if (password_needs_rehash($usuario['password'], PASSWORD_DEFAULT)) {
+                // Si la contraseña no está cifrada correctamente, actualízala
+                $hashedPassword = password_hash($usuario['password'], PASSWORD_DEFAULT);
+                $updateSql = "UPDATE usuarios SET password = ? WHERE email = ?";
+                $updateStmt = $mysqli->prepare($updateSql);
+                $updateStmt->bind_param("ss", $hashedPassword, $email);
+                $updateStmt->execute();
+            }
+
+            // Verificar la contraseña usando password_verify
+            if (password_verify($password, $usuario['password'])) {
                 unset($usuario['password']);
                 return ['success' => true, 'usuario' => $usuario];
             } else {
-                return ['success' => false, 'error' => 'Contraseña incorrecta'];
+                return ['success' => false, 'error' => 'Contraseña o usuario incorrectos'];
             }
         } else {
-            return ['success' => false, 'error' => 'Usuario no encontrado'];
+            return ['success' => false, 'error' => 'Usuario o contraseña incorrectos'];
         }
     } catch (Exception $e) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+
+
 
 function actualizarUsuario($objeto) {
     global $mysqli;

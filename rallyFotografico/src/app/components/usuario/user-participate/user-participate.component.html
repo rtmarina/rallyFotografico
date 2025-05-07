@@ -3,6 +3,8 @@
     <div class="formulario">
       <h2>Nos alegra que te interese participar en FotoRall, por favor rellena el siguiente formulario:</h2>
       <form class="row g-3" (ngSubmit)="registrarUsuario($event)" #form="ngForm" novalidate>
+        
+        <!-- Nombre -->
         <div class="col-6">
           <label for="nombreInput" class="form-label">Nombre</label>
           <input type="text" class="form-control" id="nombreInput"
@@ -11,7 +13,8 @@
             El nombre debe tener más de un carácter.
           </div>
         </div>
-      
+        
+        <!-- Email -->
         <div class="col-6">
           <label for="emailInput" class="form-label">Email</label>
           <input type="email" class="form-control" id="emailInput"
@@ -19,8 +22,14 @@
           <div class="text-danger" *ngIf="emailInput.touched && emailInput.invalid">
             Introduce un correo válido.
           </div>
+          <!-- Mostrar el error de correo ya registrado -->
+          <div class="text-danger" *ngIf="emailExiste">
+            El correo ya está registrado.
+          </div>
         </div>
-      
+        
+        
+        <!-- Contraseña -->
         <div class="col-12">
           <label for="inputPassword" class="form-label">Contraseña</label>
           <input type="password" class="form-control" id="inputPassword"
@@ -29,16 +38,17 @@
             La contraseña debe tener al menos 4 caracteres.
           </div>
         </div>
-      
+
+        <!-- Aceptación de términos y condiciones -->
         <div class="col-12">
-          <input type="checkbox" class="form-check-input" id="check" [(ngModel)]="terminosCondiciones" name="terminosCondiciones">
+          <input type="checkbox" class="form-check-input" id="check" [(ngModel)]="terminosCondiciones" name="terminosCondiciones" required>
           <label class="form-check-label" for="check">Acepto los términos y condiciones</label>
           <div class="text-danger" *ngIf="formularioEnviado && !terminosCondiciones">
             Debes aceptar los términos y condiciones
           </div>
         </div>
-        
-      
+
+        <!-- Botón de envío -->
         <div class="col-12">
           <button type="submit" class="btn btn-primary">Regístrate</button>
         </div>

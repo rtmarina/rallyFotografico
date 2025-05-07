@@ -22,6 +22,11 @@ export class UserLoginComponent {
   constructor(private userService: UserService, private router: Router) {}
 
   iniciarSesion() {
+    if (!this.email || !this.password) {
+      this.error = 'Por favor, ingresa ambos campos: correo y contraseña.';
+      return;
+    }
+
     this.userService.iniciarSesion(this.email, this.password).subscribe({
       next: (res: any) => {
         console.log('Respuesta del servidor:', res);

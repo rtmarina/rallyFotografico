@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Usuarios } from '../models/usuarios';
 
@@ -26,12 +26,15 @@ export class AdminServiceService {
     return this.http.post(this.url, cuerpo);
   }
 
-  public insertarUser(usuario: Usuarios) {
-    let copia = JSON.parse(JSON.stringify(usuario));
-    copia.servicio = "crearUsuario";
+  insertarUser(usuario: Usuarios) {
+    let copia = JSON.parse(JSON.stringify(usuario)); 
+    copia.servicio = "crearUsuario";  // Asegúrate de que el servicio esté incluido
+  
+    console.log("Datos a enviar:", copia); // Verifica el objeto antes de enviarlo
   
     return this.http.post<Usuarios>(this.url, JSON.stringify(copia));
   }
+  
 
   public actualizarUser(usuario: Usuarios) {
     let copia = JSON.parse(JSON.stringify(usuario));
