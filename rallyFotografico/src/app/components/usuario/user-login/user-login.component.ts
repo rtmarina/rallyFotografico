@@ -18,7 +18,6 @@ export class UserLoginComponent {
   password = '';
   error = '';
   
-
   constructor(private userService: UserService, private router: Router) {}
 
   iniciarSesion() {
