@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private url = "http://localhost/rallyFotografico/backend/servicio.php";
+  private url = "https://fotorall.wuaze.com/servicio.php";
 
   constructor(private http: HttpClient) {}
 

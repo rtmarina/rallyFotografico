@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Conexión a la base de datos
-$mysqli = new mysqli("localhost", "root", "", "rally_fotografico");
+$mysqli = new mysqli("sql108.infinityfree.com", "if0_39016022", "jUiF8cTGgnFT9yS", "if0_39016022_rally_fotografico");
 
 if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);

@@ -14,7 +14,7 @@ export class AdminGalleryComponent implements OnInit {
   fImagen: File | null = null; // Archivo seleccionado
   inputFile: any = null; // Referencia al campo de archivo
   imagen64: string = ""; // Contenido en Base64 para previsualización (opcional)
-  url = "http://localhost/FCT/rallyFotografico/backend/servicio.php"; // URL del backend
+  url = "https://fotorall.wuaze.com/servicio.php"; // URL del backend
 
   constructor() { }
 
