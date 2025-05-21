@@ -12,7 +12,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 export class UserGalleryComponent {
   photos: any[] = []; // Lista dinámica de fotos cargadas desde el backend
   currentPage = 1; // Página actual para la paginación
-  url = "https://fotorall.wuaze.com/servicio.php"; // URL del backend
+  url = "http://localhost/rallyFotografico/backend/servicio.php"; // URL del backend
 
   constructor() {}
 

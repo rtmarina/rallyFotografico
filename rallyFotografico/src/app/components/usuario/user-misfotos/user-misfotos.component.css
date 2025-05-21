@@ -10,6 +10,26 @@ body {
   padding: 5px;
 }
 
+/* Mensaje de alerta cuando no está logueado */
+.alert-warning {
+  background-color: #d5fffd;
+  border: 2px solid #7aa8ff;
+  color: #13438b;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 50px auto;
+  text-align: center;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.alert-warning strong {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 /* Botón de subir archivo */
 .cargar {
   display: flex;
@@ -82,7 +102,6 @@ body {
 }
 
 /* Botones y acciones dentro de la tarjeta */
-/* Botones juntos en una fila */
 .btn-group {
   display: flex;
   gap: 8px;

@@ -17,18 +17,19 @@ export class UserMisfotosComponent {
   photos: any[] = [];
   currentPage: number = 1;
   usuario: any = null;
+  logueado: boolean = false;
 
   constructor(private userService: UserService) {}
 
   ngOnInit() {
     const usuarioString = localStorage.getItem('usuario');
-    if (usuarioString) {
-      this.usuario = JSON.parse(usuarioString);
-      this.cargarFotos();
-    } else {
-      console.warn('No hay usuario logueado en localStorage');
-      // Redirigir al login o mostrar un mensaje adecuado
-    }
+  if (usuarioString) {
+    this.usuario = JSON.parse(usuarioString);
+    this.logueado = true;
+    this.cargarFotos();
+  } else {
+    this.logueado = false;
+  }
   }
 
   leerImagen(event: any) {
