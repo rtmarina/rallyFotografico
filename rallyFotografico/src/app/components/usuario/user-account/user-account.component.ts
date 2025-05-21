@@ -23,6 +23,7 @@ usuario: any = null;
 
   ngOnInit() {
     this.cargarUsuario();
+    this.contarFotos();
   }
 
   cargarUsuario() {
@@ -127,5 +128,23 @@ usuario: any = null;
 
     lector.readAsDataURL(archivo);
   }
+
+contarFotos() {
+  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
+  const id = usuarioLocal.id;
+
+  this.userService.contarFotosUsuario(id).subscribe({
+    next: (data) => {
+      console.log('Conteo de fotos:', data);
+      if (this.usuario) {
+        this.usuario.fotosSubidas = data.total; // Asigna el número de fotos correctamente
+      }
+    },
+    error: (err) => console.error('Error al obtener el conteo de fotos:', err)
+  });
 }
+
+
+}
+
 

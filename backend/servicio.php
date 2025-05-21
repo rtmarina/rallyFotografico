@@ -109,6 +109,10 @@ if ($objeto != null && isset($objeto->servicio)) {
         case "getUsuario":
             echo json_encode(getUsuario($objeto->id));
             break;
+        case 'contarFotosUsuario':
+            echo json_encode(contarFotosPorUsuario($objeto->id_usuario));
+            break;
+
 
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
@@ -425,6 +429,25 @@ function getUsuario($id) {
     $stmt->execute();
     $resultado = $stmt->get_result();
     return $resultado->fetch_assoc();
+}
+
+function contarFotosPorUsuario($usuario_id) {
+    global $mysqli;
+
+    $sql = "SELECT COUNT(*) AS total FROM fotografias WHERE usuario_id = ?";
+    $stmt = $mysqli->prepare($sql);
+    
+    if ($stmt === false) {
+        return ['error' => 'Error al preparar la consulta.'];
+    }
+
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $stmt->bind_result($total);
+    $stmt->fetch();
+    $stmt->close();
+
+    return ['total' => $total];
 }
 
 

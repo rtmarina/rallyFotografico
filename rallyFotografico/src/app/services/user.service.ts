@@ -101,5 +101,16 @@ getUsuario(id: number) {
   return this.http.post<any>(this.url, datos);
 }
 
+contarFotosUsuario(usuario_id: number): Observable<{ total: number }> {
+  const cuerpo = { 
+    servicio: 'contarFotosUsuario', 
+    id_usuario: usuario_id 
+  };
+  return this.http.post<{ total: number }>(this.url, cuerpo);
+}
+
+
+
+
 
 }
