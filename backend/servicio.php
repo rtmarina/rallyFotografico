@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Conexión a la base de datos
-$mysqli = new mysqli("localhost", "root", "", "rally_fotografico");
+$mysqli = new mysqli("sql108.infinityfree.com", "if0_39016022", "jUiF8cTGgnFT9yS", "if0_39016022_rally_fotografico");
 
 
 if ($mysqli->connect_error) {
@@ -205,17 +205,7 @@ function iniciarSesion($email, $password) {
         if ($res->num_rows === 1) {
             $usuario = $res->fetch_assoc();
 
-            // Verificar si la contraseña está cifrada
-            if (password_needs_rehash($usuario['password'], PASSWORD_DEFAULT)) {
-                // Si la contraseña no está cifrada correctamente, actualízala
-                $hashedPassword = password_hash($usuario['password'], PASSWORD_DEFAULT);
-                $updateSql = "UPDATE usuarios SET password = ? WHERE email = ?";
-                $updateStmt = $mysqli->prepare($updateSql);
-                $updateStmt->bind_param("ss", $hashedPassword, $email);
-                $updateStmt->execute();
-            }
-
-            // Verificar la contraseña usando password_verify
+            // Verificamos la contraseña con password_verify directamente
             if (password_verify($password, $usuario['password'])) {
                 unset($usuario['password']);
                 return ['success' => true, 'usuario' => $usuario];
@@ -229,6 +219,7 @@ function iniciarSesion($email, $password) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+
 
 
 
@@ -430,7 +421,7 @@ function actualizarFotoPerfil($usuario_id, $base64) {
 
 function getUsuario($id) {
     global $mysqli;
-    $sql = "SELECT id, nombre, email, imagen_perfil FROM usuarios WHERE id = ?";
+    $sql = "SELECT id, nombre, email, rol, fecha_registro, imagen_perfil FROM usuarios WHERE id = ?";
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("i", $id);
     $stmt->execute();

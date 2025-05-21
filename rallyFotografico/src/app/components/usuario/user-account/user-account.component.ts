@@ -27,8 +27,10 @@ usuario: any = null;
     this.contarVotos();
   }
 
-  cargarUsuario() {
-    const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
+ cargarUsuario() {
+  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || 'null');
+
+  if (usuarioLocal && usuarioLocal.id) {
     const id = usuarioLocal.id;
 
     this.userService.getUsuario(id).subscribe({
@@ -40,7 +42,11 @@ usuario: any = null;
         console.error('Error al cargar usuario:', err);
       }
     });
+  } else {
+    console.warn('No se encontró un usuario válido en localStorage');
   }
+}
+
 
   cerrarSesion() {
     localStorage.removeItem('usuario');
@@ -131,34 +137,49 @@ usuario: any = null;
   }
 
 contarFotos() {
-  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
-  const id = usuarioLocal.id;
+  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || 'null');
 
-  this.userService.contarFotosUsuario(id).subscribe({
-    next: (data) => {
-      console.log('Conteo de fotos:', data);
-      if (this.usuario) {
-        this.usuario.fotosSubidas = data.total; // Asigna el número de fotos correctamente
+  if (usuarioLocal && usuarioLocal.id) {
+    const id = usuarioLocal.id;
+
+    this.userService.contarFotosUsuario(id).subscribe({
+      next: (data) => {
+        console.log('Conteo de fotos:', data);
+        if (this.usuario) {
+          this.usuario.fotosSubidas = data.total ?? 0; // Previene errores si total es undefined
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener el conteo de fotos:', err);
       }
-    },
-    error: (err) => console.error('Error al obtener el conteo de fotos:', err)
-  });
+    });
+  } else {
+    console.warn('No se puede contar fotos: usuario no válido en localStorage');
+  }
 }
 
 contarVotos() {
-  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
-  const id = usuarioLocal.id;
+  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || 'null');
 
-  this.userService.contarVotosUsuario(id).subscribe({
-    next: (data) => {
-      console.log('Conteo de votos:', data);
-      if (this.usuario) {
-        this.usuario.votosRecibidos = data.total; // Asegúrate de tener esta propiedad
+  if (usuarioLocal && usuarioLocal.id) {
+    const id = usuarioLocal.id;
+
+    this.userService.contarVotosUsuario(id).subscribe({
+      next: (data) => {
+        console.log('Conteo de votos:', data);
+        if (this.usuario) {
+          this.usuario.votosRecibidos = data.total ?? 0; // Previene errores si total es undefined
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener el conteo de votos:', err);
       }
-    },
-    error: (err) => console.error('Error al obtener el conteo de votos:', err)
-  });
+    });
+  } else {
+    console.warn('No se puede contar votos: usuario no válido en localStorage');
+  }
 }
+
 
 }
 

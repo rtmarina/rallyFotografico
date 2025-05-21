@@ -7,7 +7,7 @@ import { Usuarios } from '../models/usuarios';
   providedIn: 'root'
 })
 export class AdminServiceService {
-  private url: string = "http://localhost/rallyFotografico/backend/servicio.php";
+  private url: string = "https://fotorall.wuaze.com/servicio.php";
 
   constructor(private http: HttpClient) { }
 

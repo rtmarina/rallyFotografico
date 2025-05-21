@@ -14,7 +14,7 @@ export class AdminGalleryComponent implements OnInit {
   fImagen: File | null = null; // Archivo seleccionado
   inputFile: any = null; // Referencia al campo de archivo
   imagen64: string = ""; // Contenido en Base64 para previsualización (opcional)
-  url = "http://localhost/rallyFotografico/backend/servicio.php"; // URL del backend
+  url = "https://fotorall.wuaze.com/servicio.php"; // URL del backend
 
   constructor() { }
 
@@ -32,7 +32,7 @@ export class AdminGalleryComponent implements OnInit {
         // Transformar datos en un array compatible con photos
         this.photos = datos.imagenes.map((imagen: string, index: number) => ({
           id: index + 1, // Asignar un ID único
-          url: `http://localhost/rallyFotografico/backend/imagenes/${imagen}`, // URL completa de la imagen
+          url: `https://fotorall.wuaze.com/imagenes/${imagen}`, // URL completa de la imagen
           likes: 0 // Inicializar con 0 likes
         }));
       } else {
