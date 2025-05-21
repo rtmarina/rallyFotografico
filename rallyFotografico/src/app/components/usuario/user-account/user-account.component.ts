@@ -13,24 +13,36 @@ import { FormsModule } from '@angular/forms';
   providers: [UserService]
 })
 export class UserAccountComponent implements OnInit {
-  usuario: any = null;
+usuario: any = null;
   editar: boolean = false;
   mostrarFormularioPassword: boolean = false;
   nuevaPassword: string = '';
   confirmarPassword: string = '';
 
-  constructor(private router: Router, private userService: UserService) {
-    this.usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
-  }
+  constructor(private router: Router, private userService: UserService) {}
 
   ngOnInit() {
-    const usuarioStr = localStorage.getItem('usuario');
-    this.usuario = usuarioStr ? JSON.parse(usuarioStr) : null;
+    this.cargarUsuario();
+  }
+
+  cargarUsuario() {
+    const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
+    const id = usuarioLocal.id;
+
+    this.userService.getUsuario(id).subscribe({
+      next: (usuarioActualizado) => {
+        this.usuario = usuarioActualizado;
+        localStorage.setItem('usuario', JSON.stringify(this.usuario));
+      },
+      error: (err) => {
+        console.error('Error al cargar usuario:', err);
+      }
+    });
   }
 
   cerrarSesion() {
     localStorage.removeItem('usuario');
-    this.router.navigate(['/login']); 
+    this.router.navigate(['/login']);
   }
 
   guardarCambios() {
@@ -39,7 +51,7 @@ export class UserAccountComponent implements OnInit {
       nombre: this.usuario.nombre,
       email: this.usuario.email
     };
-  
+
     this.userService.actualizarUsuario(datosActualizados).subscribe(res => {
       if (res.success) {
         alert('Datos actualizados correctamente');
@@ -50,7 +62,6 @@ export class UserAccountComponent implements OnInit {
       }
     });
   }
-  
 
   cambiarContrasena() {
     if (!this.nuevaPassword || !this.confirmarPassword) {
@@ -79,7 +90,7 @@ export class UserAccountComponent implements OnInit {
 
   eliminarCuenta() {
     const confirmar = confirm("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.");
-  
+
     if (confirmar) {
       this.userService.eliminarUsuario(this.usuario.id).subscribe(res => {
         if (res.success) {
@@ -93,27 +104,28 @@ export class UserAccountComponent implements OnInit {
     }
   }
 
-  subirImagenPerfil(event: any) {
-  const archivo = event.target.files[0];
-  if (archivo) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      this.usuario.imagen_perfil = base64;
+  subirFotoPerfil(event: any) {
+    const archivo = event.target.files[0];
 
-      this.userService.actualizarFotoPerfil(this.usuario.id, base64).subscribe(res => {
-        if (res.success) {
-          alert('Foto de perfil actualizada');
-          localStorage.setItem('usuario', JSON.stringify(this.usuario));
-        } else {
-          alert('Error al actualizar la foto: ' + res.error);
-        }
+    const lector = new FileReader();
+    lector.onload = () => {
+      const base64 = (lector.result as string).split(',')[1]; // solo la parte base64
+      const usuario_id = this.usuario.id;
+
+      this.userService.actualizarFotoPerfil(usuario_id, base64).subscribe({
+        next: res => {
+          if (res.success) {
+            alert('Foto actualizada correctamente');
+            this.cargarUsuario(); 
+          } else {
+            console.error('Error en el backend:', res.error);
+          }
+        },
+        error: err => console.error('Error HTTP:', err)
       });
     };
-    reader.readAsDataURL(archivo);
+
+    lector.readAsDataURL(archivo);
   }
 }
 
-  
-  
-}

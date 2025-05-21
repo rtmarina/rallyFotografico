@@ -104,8 +104,12 @@ if ($objeto != null && isset($objeto->servicio)) {
             echo json_encode(actualizarNombreFoto($objeto->id, $objeto->nuevoNombre));
             break;
         case "actualizarFotoPerfil":
-            echo json_encode(['success' => true]);
+            echo json_encode(actualizarFotoPerfil($objeto->usuario_id, $objeto->base64));
             break;
+        case "getUsuario":
+            echo json_encode(getUsuario($objeto->id));
+            break;
+
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
     }
@@ -393,17 +397,34 @@ function actualizarNombreFoto($id, $nuevoNombre) {
 
 function actualizarFotoPerfil($usuario_id, $base64) {
     global $mysqli;
+
+    if (!$usuario_id || !$base64) {
+        return ['success' => false, 'error' => 'Datos incompletos'];
+    }
+
     try {
         $sql = "UPDATE usuarios SET imagen_perfil = ? WHERE id = ?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("si", $base64, $usuario_id);
+
         if ($stmt->execute()) {
             return ['success' => true];
         } else {
-            return ['success' => false, 'error' => 'No se pudo actualizar la foto de perfil'];
+            return ['success' => false, 'error' => 'Error al actualizar en la base de datos'];
         }
     } catch (Exception $e) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+
+function getUsuario($id) {
+    global $mysqli;
+    $sql = "SELECT id, nombre, email, imagen_perfil FROM usuarios WHERE id = ?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    return $resultado->fetch_assoc();
+}
+
 

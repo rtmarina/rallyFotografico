@@ -1,30 +1,32 @@
 <div class="account-container" *ngIf="usuario; else noLogueado">
   <div class="account-card">
     <div class="avatar text-center mb-3">
-      <div class="position-relative d-inline-block">
-        <img
-          [src]="usuario.imagen_perfil"
-          alt="Foto de perfil"
-          class="rounded-circle border"
-          width="120"
-          height="120"
-        />
-        <span
-          class="position-absolute bottom-0 end-0 bg-light border rounded-circle p-1"
-          style="cursor: pointer"
-          (click)="fileInput.click()"
-        >
-          ✏️
-        </span>
-        <input
-            type="file"
-            #fileInput
-            class="d-none"
-            accept="image/*"
-            (change)="subirImagenPerfil($event)"
-        />
-      </div>
-    </div>
+  <div class="position-relative d-inline-block">
+    <img
+      *ngIf="usuario?.imagen_perfil"
+      [src]="'data:image/jpeg;base64,' + usuario.imagen_perfil"
+      alt="Foto de perfil"
+      class="rounded-circle border"
+      width="120"
+      height="120"
+    />
+    <span
+      class="position-absolute bottom-0 end-0 bg-light border rounded-circle p-1"
+      style="cursor: pointer"
+      (click)="fileInput.click()"
+    >
+      ✏️
+    </span>
+    <input
+      #fileInput
+      type="file"
+      (change)="subirFotoPerfil($event)"
+      accept="image/*"
+      style="display: none;"
+    />
+  </div>
+</div>
+
     
 
     <h2>{{ usuario.nombre }}</h2>

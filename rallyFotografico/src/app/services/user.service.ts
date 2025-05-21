@@ -84,13 +84,22 @@ actualizarNombreFoto(id: number, nuevoNombre: string): Observable<any> {
   return this.http.post(this.url, cuerpo);
 }
 
-actualizarFotoPerfil(id: number, imagenBase64: string): Observable<any> {
-  const cuerpo = {
+actualizarFotoPerfil(usuario_id: number, base64: string) {
+  const datos = {
     servicio: 'actualizarFotoPerfil',
-    id: id,
-    imagen_perfil: imagenBase64
+    usuario_id: usuario_id,
+    base64: base64
   };
-  return this.http.post(this.url, cuerpo);
+  return this.http.post<any>(this.url, datos);
 }
+
+getUsuario(id: number) {
+  const datos = {
+    servicio: 'getUsuario',
+    id
+  };
+  return this.http.post<any>(this.url, datos);
+}
+
 
 }
