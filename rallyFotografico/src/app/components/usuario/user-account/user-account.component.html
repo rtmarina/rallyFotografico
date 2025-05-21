@@ -17,11 +17,11 @@
           ✏️
         </span>
         <input
-          type="file"
-          #fileInput
-          class="d-none"
-          
-          accept="image/*"
+            type="file"
+            #fileInput
+            class="d-none"
+            accept="image/*"
+            (change)="subirImagenPerfil($event)"
         />
       </div>
     </div>

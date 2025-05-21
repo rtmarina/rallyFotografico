@@ -93,7 +93,27 @@ export class UserAccountComponent implements OnInit {
     }
   }
 
-  
+  subirImagenPerfil(event: any) {
+  const archivo = event.target.files[0];
+  if (archivo) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      this.usuario.imagen_perfil = base64;
+
+      this.userService.actualizarFotoPerfil(this.usuario.id, base64).subscribe(res => {
+        if (res.success) {
+          alert('Foto de perfil actualizada');
+          localStorage.setItem('usuario', JSON.stringify(this.usuario));
+        } else {
+          alert('Error al actualizar la foto: ' + res.error);
+        }
+      });
+    };
+    reader.readAsDataURL(archivo);
+  }
+}
+
   
   
 }

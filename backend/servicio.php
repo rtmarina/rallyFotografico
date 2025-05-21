@@ -103,7 +103,9 @@ if ($objeto != null && isset($objeto->servicio)) {
         case "actualizarNombreFoto":
             echo json_encode(actualizarNombreFoto($objeto->id, $objeto->nuevoNombre));
             break;
-
+        case "actualizarFotoPerfil":
+            echo json_encode(['success' => true]);
+            break;
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
     }
@@ -383,6 +385,22 @@ function actualizarNombreFoto($id, $nuevoNombre) {
             return ['success' => true];
         } else {
             return ['success' => false, 'error' => 'No se pudo actualizar el nombre'];
+        }
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+function actualizarFotoPerfil($usuario_id, $base64) {
+    global $mysqli;
+    try {
+        $sql = "UPDATE usuarios SET imagen_perfil = ? WHERE id = ?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("si", $base64, $usuario_id);
+        if ($stmt->execute()) {
+            return ['success' => true];
+        } else {
+            return ['success' => false, 'error' => 'No se pudo actualizar la foto de perfil'];
         }
     } catch (Exception $e) {
         return ['success' => false, 'error' => $e->getMessage()];
