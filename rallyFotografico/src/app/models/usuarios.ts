@@ -4,4 +4,5 @@ export interface Usuarios {
     email: string;
     password: string;
     fotosSubidas?: number;
+    totalVotos?: number;
 }

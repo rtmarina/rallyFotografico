@@ -24,6 +24,7 @@ usuario: any = null;
   ngOnInit() {
     this.cargarUsuario();
     this.contarFotos();
+    this.contarVotos();
   }
 
   cargarUsuario() {
@@ -144,6 +145,20 @@ contarFotos() {
   });
 }
 
+contarVotos() {
+  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
+  const id = usuarioLocal.id;
+
+  this.userService.contarVotosUsuario(id).subscribe({
+    next: (data) => {
+      console.log('Conteo de votos:', data);
+      if (this.usuario) {
+        this.usuario.votosRecibidos = data.total; // Asegúrate de tener esta propiedad
+      }
+    },
+    error: (err) => console.error('Error al obtener el conteo de votos:', err)
+  });
+}
 
 }
 

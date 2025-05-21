@@ -110,6 +110,14 @@ contarFotosUsuario(usuario_id: number): Observable<{ total: number }> {
 }
 
 
+contarVotosUsuario(usuario_id: number): Observable<{ total: number }> {
+  const cuerpo = { 
+    servicio: 'contarVotosUsuario', 
+    id_usuario: usuario_id 
+  };
+  console.log(cuerpo);
+  return this.http.post<{ total: number }>(this.url, cuerpo);
+}
 
 
 

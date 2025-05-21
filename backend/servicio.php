@@ -112,7 +112,15 @@ if ($objeto != null && isset($objeto->servicio)) {
         case 'contarFotosUsuario':
             echo json_encode(contarFotosPorUsuario($objeto->id_usuario));
             break;
+        case 'contarVotosUsuario':
+             if (!isset($objeto->id_usuario)) {
+        echo json_encode(['error' => 'Falta el id_usuario']);
+        break;
+    }
 
+    $resultado = contarVotosPorUsuario(intval($objeto->id_usuario));
+    echo json_encode($resultado);
+    break;
 
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
@@ -120,7 +128,6 @@ if ($objeto != null && isset($objeto->servicio)) {
 }
 
 
-// Métodos de usuarios (se mantienen igual)
 function listadoUsuarios(){
     global $mysqli;
     try{
@@ -450,4 +457,26 @@ function contarFotosPorUsuario($usuario_id) {
     return ['total' => $total];
 }
 
+function contarVotosPorUsuario($usuario_id) {
+    global $mysqli;
+
+    if (!isset($mysqli)) {
+        return ['error' => 'No hay conexión a la base de datos.'];
+    }
+
+    $sql = "SELECT SUM(likes) AS total FROM fotografias WHERE usuario_id = ?";
+    $stmt = $mysqli->prepare($sql);
+
+    if (!$stmt) {
+        return ['error' => 'Error en prepare: ' . $mysqli->error];
+    }
+
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $stmt->bind_result($total);
+    $stmt->fetch();
+    $stmt->close();
+
+    return ['total' => $total ?? 0];
+}
 
