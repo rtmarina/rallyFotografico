@@ -141,4 +141,10 @@ body {
     background: #0042f73a;
     color: white;
   }
+  .error-message {
+    color: #d9534f;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
   

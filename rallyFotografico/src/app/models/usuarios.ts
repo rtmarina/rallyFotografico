@@ -4,6 +4,4 @@ export interface Usuarios {
     email: string;
     password: string;
     rol: string;
-    fotosSubidas?: number;
-    totalVotos?: number;
 }

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-user-gallery',
@@ -12,13 +13,18 @@ import { NgxPaginationModule } from 'ngx-pagination';
 export class UserGalleryComponent {
   photos: any[] = []; // Lista dinámica de fotos cargadas desde el backend
   currentPage = 1; // Página actual para la paginación
-  url = "https://fotorall.wuaze.com/servicio.php"; // URL del backend
-
+  url = environment.apiUrl; // URL del backend
+usuarioLogueado: boolean = false;
   constructor() {}
 
   ngOnInit() {
-    this.cargarImagenes(); // Cargar imágenes al iniciar el componente
+    const usuario = localStorage.getItem('usuario');
+  this.usuarioLogueado = !!usuario;
+    this.cargarImagenes(); 
+    // Cargar imágenes al iniciar el componente
   }
+
+
 
   // Método para cargar imágenes desde el backend
   async cargarImagenes() {
@@ -45,25 +51,31 @@ export class UserGalleryComponent {
 
   // Método para incrementar los likes de una foto
   async likePhoto(photoId: number) {
-    const parametros = {
-      method: 'POST',
-      body: JSON.stringify({ servicio: 'actualizarLikes', id: photoId }),
-      headers: { 'Content-Type': 'application/json' }
-    };
-  
-    try {
-      const respuesta = await fetch(this.url, parametros);
-      if (respuesta.ok) {
-        console.log(`Likes actualizados para la foto ${photoId}`);
-        const photo = this.photos.find(p => p.id === photoId);
-        if (photo) {
-          photo.likes++;
-        }
-      } else {
-        console.error('Error al actualizar likes');
-      }
-    } catch (error) {
-      console.error('Error en la solicitud de likes:', error);
-    }
+  if (!this.usuarioLogueado) {
+    alert('Debes iniciar sesión para poder votar.');
+    return;
   }
+
+  const parametros = {
+    method: 'POST',
+    body: JSON.stringify({ servicio: 'actualizarLikes', id: photoId }),
+    headers: { 'Content-Type': 'application/json' }
+  };
+
+  try {
+    const respuesta = await fetch(this.url, parametros);
+    if (respuesta.ok) {
+      console.log(`Likes actualizados para la foto ${photoId}`);
+      const photo = this.photos.find(p => p.id === photoId);
+      if (photo) {
+        photo.likes++;
+      }
+    } else {
+      console.error('Error al actualizar likes');
+    }
+  } catch (error) {
+    console.error('Error en la solicitud de likes:', error);
+  }
+}
+
 }

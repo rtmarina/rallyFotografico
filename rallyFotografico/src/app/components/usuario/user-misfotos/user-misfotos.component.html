@@ -4,6 +4,7 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   </head>
   <body>
+    <h1>Mis Fotos</h1>
     <div class="cargar">
       <button class="btn guardar-archivo" (click)="subirArchivo()">Subir Archivo</button>
       <input type="file" (change)="leerImagen($event)" >
@@ -15,7 +16,7 @@
   <div class="container">
       <div class="row">
         <div 
-          *ngFor="let photo of photos | paginate: { itemsPerPage: 15, currentPage: currentPage }" 
+          *ngFor="let photo of photos | paginate: { itemsPerPage: 6, currentPage: currentPage }" 
           class="col-md-4 col-sm-6 col-12">
           <div class="photo-card">
             <img [src]="photo.url" alt="Foto"> 

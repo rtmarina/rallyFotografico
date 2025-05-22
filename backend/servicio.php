@@ -109,19 +109,6 @@ if ($objeto != null && isset($objeto->servicio)) {
         case "getUsuario":
             echo json_encode(getUsuario($objeto->id));
             break;
-        case 'contarFotosUsuario':
-            echo json_encode(contarFotosPorUsuario($objeto->id_usuario));
-            break;
-        case 'contarVotosUsuario':
-             if (!isset($objeto->id_usuario)) {
-        echo json_encode(['error' => 'Falta el id_usuario']);
-        break;
-    }
-
-    $resultado = contarVotosPorUsuario(intval($objeto->id_usuario));
-    echo json_encode($resultado);
-    break;
-
         default:
             echo json_encode(['success' => false, 'error' => 'Servicio no reconocido']);
     }
@@ -147,7 +134,7 @@ function crearUsuario($objeto){
     // Validaciones básicas
     if (!isset($objeto->nombre) || strlen(trim($objeto->nombre)) <= 1) {
         http_response_code(400);
-        echo json_encode(["error" => "Nombre inválido"]);
+        echo json_encode(["error" => "Nombre inválido, debe tener al menos 1 caracter"]);
         exit;
     }
 
@@ -205,7 +192,17 @@ function iniciarSesion($email, $password) {
         if ($res->num_rows === 1) {
             $usuario = $res->fetch_assoc();
 
-            // Verificamos la contraseña con password_verify directamente
+            // Verificar si la contraseña está cifrada
+            if (password_needs_rehash($usuario['password'], PASSWORD_DEFAULT)) {
+                // Si la contraseña no está cifrada correctamente, actualízala
+                $hashedPassword = password_hash($usuario['password'], PASSWORD_DEFAULT);
+                $updateSql = "UPDATE usuarios SET password = ? WHERE email = ?";
+                $updateStmt = $mysqli->prepare($updateSql);
+                $updateStmt->bind_param("ss", $hashedPassword, $email);
+                $updateStmt->execute();
+            }
+
+            // Verificar la contraseña usando password_verify
             if (password_verify($password, $usuario['password'])) {
                 unset($usuario['password']);
                 return ['success' => true, 'usuario' => $usuario];
@@ -227,9 +224,16 @@ function actualizarUsuario($objeto) {
     global $mysqli;
     try {
         if (isset($objeto->password) && !empty($objeto->password)) {
+            if (strlen($objeto->password) < 6) {
+                return ['success' => false, 'error' => 'La contraseña debe tener al menos 4 caracteres'];
+            }
+
+            // Cifrar la nueva contraseña
+            $passwordHash = password_hash($objeto->password, PASSWORD_DEFAULT);
+
             $sql = "UPDATE usuarios SET nombre = ?, email = ?, password = ? WHERE id = ?";
             $stmt = $mysqli->prepare($sql);
-            $stmt->bind_param("sssi", $objeto->nombre, $objeto->email, $objeto->password, $objeto->id);
+            $stmt->bind_param("sssi", $objeto->nombre, $objeto->email, $passwordHash, $objeto->id);
         } else {
             $sql = "UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?";
             $stmt = $mysqli->prepare($sql);
@@ -245,6 +249,7 @@ function actualizarUsuario($objeto) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+
 
 
 function eliminarUsuario($id) {
@@ -429,45 +434,5 @@ function getUsuario($id) {
     return $resultado->fetch_assoc();
 }
 
-function contarFotosPorUsuario($usuario_id) {
-    global $mysqli;
 
-    $sql = "SELECT COUNT(*) AS total FROM fotografias WHERE usuario_id = ?";
-    $stmt = $mysqli->prepare($sql);
-    
-    if ($stmt === false) {
-        return ['error' => 'Error al preparar la consulta.'];
-    }
-
-    $stmt->bind_param("i", $usuario_id);
-    $stmt->execute();
-    $stmt->bind_result($total);
-    $stmt->fetch();
-    $stmt->close();
-
-    return ['total' => $total];
-}
-
-function contarVotosPorUsuario($usuario_id) {
-    global $mysqli;
-
-    if (!isset($mysqli)) {
-        return ['error' => 'No hay conexión a la base de datos.'];
-    }
-
-    $sql = "SELECT SUM(likes) AS total FROM fotografias WHERE usuario_id = ?";
-    $stmt = $mysqli->prepare($sql);
-
-    if (!$stmt) {
-        return ['error' => 'Error en prepare: ' . $mysqli->error];
-    }
-
-    $stmt->bind_param("i", $usuario_id);
-    $stmt->execute();
-    $stmt->bind_result($total);
-    $stmt->fetch();
-    $stmt->close();
-
-    return ['total' => $total ?? 0];
-}
 

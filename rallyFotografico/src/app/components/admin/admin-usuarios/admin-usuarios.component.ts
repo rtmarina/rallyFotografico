@@ -12,8 +12,9 @@ import { CommonModule } from '@angular/common';
 })
 export class AdminUsuariosComponent implements OnInit{
   usuarios: Usuarios[] = [];
-  nuevoUsuario: Usuarios = { nombre: '', email: '', password: '' };
+  nuevoUsuario: Usuarios = { nombre: '', email: '', password: '', rol: ''};
   editando: boolean = false;
+  errorEmail: string = '';
 
   constructor(private servicio: AdminServiceService) {}
 
@@ -28,16 +29,27 @@ export class AdminUsuariosComponent implements OnInit{
   }
 
   crearUsuario() {
-    this.servicio.insertarUser(this.nuevoUsuario).subscribe(() => {
-      this.cargarUsuarios();
-      this.nuevoUsuario = { nombre: '', email: '', password: '' };
+    this.errorEmail = ''; 
+
+    this.servicio.insertarUser(this.nuevoUsuario).subscribe({
+      next: () => {
+        this.cargarUsuarios();
+        this.nuevoUsuario = { nombre: '', email: '', password: '', rol: '' };
+      },
+      error: (err) => {
+        if (err.status === 409) { 
+          this.errorEmail = 'Este correo ya está registrado.';
+        } else {
+          console.error('Error al crear usuario:', err);
+        }
+      }
     });
   }
 
   actualizarUsuario(usuario: Usuarios) {
     this.servicio.actualizarUser(this.nuevoUsuario).subscribe(() => {
       this.cargarUsuarios();
-      this.nuevoUsuario = { nombre: '', email: '', password: '' };
+      this.nuevoUsuario = { nombre: '', email: '', password: '', rol: '' };
       this.editando = false;
     });
   }
@@ -57,7 +69,7 @@ export class AdminUsuariosComponent implements OnInit{
   }
 
   cancelarEdicion() {
-    this.nuevoUsuario = { nombre: '', email: '', password: '' };
+    this.nuevoUsuario = { nombre: '', email: '', password: '', rol: '' };
     this.editando = false;
   }
 }

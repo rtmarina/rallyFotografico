@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private url = "https://fotorall.wuaze.com/servicio.php";
+  private url = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -101,23 +102,6 @@ getUsuario(id: number) {
   return this.http.post<any>(this.url, datos);
 }
 
-contarFotosUsuario(usuario_id: number): Observable<{ total: number }> {
-  const cuerpo = { 
-    servicio: 'contarFotosUsuario', 
-    id_usuario: usuario_id 
-  };
-  return this.http.post<{ total: number }>(this.url, cuerpo);
-}
-
-
-contarVotosUsuario(usuario_id: number): Observable<{ total: number }> {
-  const cuerpo = { 
-    servicio: 'contarVotosUsuario', 
-    id_usuario: usuario_id 
-  };
-  console.log(cuerpo);
-  return this.http.post<{ total: number }>(this.url, cuerpo);
-}
 
 
 

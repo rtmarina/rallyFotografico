@@ -2,7 +2,15 @@
 *{
   font-family: 'Lexend', sans-serif;
 }
-
+.fondo{
+   background-image: url('/user-acc.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 body {
   background: #f4f7fc;
   display: flex;
@@ -112,4 +120,11 @@ body {
   outline: none;
   border-color: #0056b3;
   box-shadow: 0 0 6px rgba(0, 86, 179, 0.3);
+}
+.no-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f7fca6;
+border-radius: 20px;
 }

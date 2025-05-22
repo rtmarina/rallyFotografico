@@ -23,8 +23,6 @@ usuario: any = null;
 
   ngOnInit() {
     this.cargarUsuario();
-    this.contarFotos();
-    this.contarVotos();
   }
 
  cargarUsuario() {
@@ -135,51 +133,6 @@ usuario: any = null;
 
     lector.readAsDataURL(archivo);
   }
-
-contarFotos() {
-  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || 'null');
-
-  if (usuarioLocal && usuarioLocal.id) {
-    const id = usuarioLocal.id;
-
-    this.userService.contarFotosUsuario(id).subscribe({
-      next: (data) => {
-        console.log('Conteo de fotos:', data);
-        if (this.usuario) {
-          this.usuario.fotosSubidas = data.total ?? 0; // Previene errores si total es undefined
-        }
-      },
-      error: (err) => {
-        console.error('Error al obtener el conteo de fotos:', err);
-      }
-    });
-  } else {
-    console.warn('No se puede contar fotos: usuario no válido en localStorage');
-  }
-}
-
-contarVotos() {
-  const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || 'null');
-
-  if (usuarioLocal && usuarioLocal.id) {
-    const id = usuarioLocal.id;
-
-    this.userService.contarVotosUsuario(id).subscribe({
-      next: (data) => {
-        console.log('Conteo de votos:', data);
-        if (this.usuario) {
-          this.usuario.votosRecibidos = data.total ?? 0; // Previene errores si total es undefined
-        }
-      },
-      error: (err) => {
-        console.error('Error al obtener el conteo de votos:', err);
-      }
-    });
-  } else {
-    console.warn('No se puede contar votos: usuario no válido en localStorage');
-  }
-}
-
 
 }
 

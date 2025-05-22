@@ -1,13 +1,14 @@
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Usuarios } from '../models/usuarios';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminServiceService {
-  private url: string = "https://fotorall.wuaze.com/servicio.php";
+  private url: string = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 

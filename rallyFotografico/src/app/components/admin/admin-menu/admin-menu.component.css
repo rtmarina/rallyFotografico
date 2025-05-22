@@ -1,6 +1,64 @@
-.btn {
-    font-size: 16px;
-  }
-*{
+/* Estilos generales */
+* {
   font-family: 'Lexend', sans-serif;
+}
+
+.fondo {
+  background-image: url('/admin-menu.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Recuadro centrado */
+.opciones {
+  width: 400px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.9); 
+  border-radius: 12px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+h2 {
+  color: #1a1a1a;
+  font-size: 2em;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+h3 {
+  color: #444;
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.d-flex {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Estilos para los botones */
+.btn-primary {
+  background-color: #6e89ff;
+  color: #ffffff;
+  padding: 12px 25px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.1em;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #5c4affe3;
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
 }

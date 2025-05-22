@@ -15,7 +15,9 @@
         <div class="input-group">
           <label for="email">Email</label>
           <input type="email" id="email" [(ngModel)]="nuevoUsuario.email" name="email" required />
+          <p *ngIf="errorEmail" class="error-message">{{ errorEmail }}</p>
         </div>
+
         <div class="input-group">
           <label for="password">Contraseña</label>
           <input

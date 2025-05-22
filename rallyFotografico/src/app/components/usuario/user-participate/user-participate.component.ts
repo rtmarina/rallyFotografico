@@ -38,7 +38,8 @@ export class UserParticipateComponent {
     const usuario = {
       nombre: this.nombre,
       email: this.email,
-      password: this.password
+      password: this.password,
+      rol: 'usuario' // Asignar rol por defecto
     };
   
     console.log('Datos enviados:', usuario); // Agregar esta línea
@@ -51,6 +52,7 @@ export class UserParticipateComponent {
         this.nombre = '';
         this.email = '';
         this.password = '';
+        
         this.terminosCondiciones = false;
         this.formularioEnviado = false;
         this.router.navigate(['/']);
