@@ -16,6 +16,7 @@ $mysqli = new mysqli("sql108.infinityfree.com", "if0_39016022", "jUiF8cTGgnFT9yS
 
 
 
+
 if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
@@ -291,19 +292,29 @@ function obtenerFotosSubidas($usuario_id) {
 function registrarImagen($objeto) {
     global $mysqli;
     try {
+        // Validar tamaño máximo (10MB)
+        $base64 = $objeto->base64;
+        $base64Length = strlen($base64) - strpos($base64, ',') - 1;
+        $padding = substr($base64, -2) === '==' ? 2 : (substr($base64, -1) === '=' ? 1 : 0);
+        $decodedSize = ($base64Length * 3) / 4 - $padding;
+
+        if ($decodedSize > 10 * 1024 * 1024) { // 10MB
+            echo json_encode(['success' => false, 'error' => 'La imagen supera el límite de 10MB.']);
+            exit();
+        }
+
         $sql = "INSERT INTO fotografias (usuario_id, nombre, base64) VALUES (?, ?, ?)";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("iss", $objeto->usuario_id, $objeto->nombre, $objeto->base64);
         $stmt->execute();
         
-        // Respuesta exitosa
         echo json_encode(['success' => true, 'mensaje' => 'Imagen registrada correctamente']);
     } catch (Exception $e) {
-        // Si ocurre un error, devuelve un error en formato JSON
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
-    exit(); // Asegura que no se envíen más datos al cliente
+    exit();
 }
+
 
 
 

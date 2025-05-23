@@ -49,33 +49,49 @@ export class UserMisfotosComponent {
   }
 
   subirArchivo() {
-    if (!this.usuario || !this.imagen64 || !this.nombreArchivo) {
-      alert('Por favor selecciona una imagen antes de continuar.');
-      return;
-    }
-  
-    this.userService.registrarImagen(this.usuario.id, this.nombreArchivo, this.imagen64)
-      .subscribe({
-        next: (res: any) => {
-          if (res.success) {
-            console.log('Imagen subida con éxito:', res);
-            alert('Imagen subida con éxito.');
-          } else {
-            console.error('Error al subir la imagen:', res.error);
-            alert('Error al subir la imagen: ' + res.error);
-          }
-        },
-        complete: () => {
-          this.cargarFotos();
-          this.imagen64 = ''; // Limpiar el campo de imagen
-          this.nombreArchivo = ''; // Limpiar el nombre del archivo
-        },
-        error: (err: any) => {
-          console.error('Error al subir imagen:', err);
-          alert('Hubo un error al subir la imagen.');
-        }
-      });
+  if (!this.usuario || !this.imagen64 || !this.nombreArchivo) {
+    alert('Por favor selecciona una imagen antes de continuar.');
+    return;
   }
+
+  // Calcular el tamaño real en bytes de la imagen base64
+  // Elimina el prefijo "data:image/xxx;base64," si existe
+  const base64String = this.imagen64.includes(',') ? this.imagen64.split(',')[1] : this.imagen64;
+  
+  // Calcula el tamaño aproximado en bytes
+  const padding = (base64String.endsWith('==') ? 2 : base64String.endsWith('=') ? 1 : 0);
+  const sizeInBytes = (base64String.length * 3) / 4 - padding;
+
+  const maxSizeInBytes = 1 * 1024 * 1024; // 10MB
+  if (sizeInBytes > maxSizeInBytes) {
+    alert('La imagen supera el límite de 1MB. Por favor elige otra.');
+    return;
+  }
+
+  this.userService.registrarImagen(this.usuario.id, this.nombreArchivo, this.imagen64)
+    .subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          console.log('Imagen subida con éxito:', res);
+          alert('Imagen subida con éxito.');
+        } else {
+          console.error('Error al subir la imagen:', res.error);
+          alert('Error al subir la imagen: ' + res.error);
+        }
+      },
+      complete: () => {
+        this.cargarFotos();
+        this.imagen64 = '';
+        this.nombreArchivo = '';
+      },
+      error: (err: any) => {
+        console.error('Error al subir imagen:', err);
+        alert('Hubo un error al subir la imagen.');
+      }
+    });
+}
+
+
   
 
   cargarFotos() {
