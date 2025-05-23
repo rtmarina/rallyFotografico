@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $mysqli = new mysqli("sql108.infinityfree.com", "if0_39016022", "jUiF8cTGgnFT9yS", "if0_39016022_rally_fotografico");
 
 
+
 if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
@@ -179,7 +180,6 @@ try {
 }
 
 }
-
 function iniciarSesion($email, $password) {
     global $mysqli;
     try {
@@ -191,16 +191,6 @@ function iniciarSesion($email, $password) {
 
         if ($res->num_rows === 1) {
             $usuario = $res->fetch_assoc();
-
-            // Verificar si la contraseña está cifrada
-            if (password_needs_rehash($usuario['password'], PASSWORD_DEFAULT)) {
-                // Si la contraseña no está cifrada correctamente, actualízala
-                $hashedPassword = password_hash($usuario['password'], PASSWORD_DEFAULT);
-                $updateSql = "UPDATE usuarios SET password = ? WHERE email = ?";
-                $updateStmt = $mysqli->prepare($updateSql);
-                $updateStmt->bind_param("ss", $hashedPassword, $email);
-                $updateStmt->execute();
-            }
 
             // Verificar la contraseña usando password_verify
             if (password_verify($password, $usuario['password'])) {
@@ -216,6 +206,7 @@ function iniciarSesion($email, $password) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+
 
 
 

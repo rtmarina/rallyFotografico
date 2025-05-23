@@ -6,7 +6,6 @@ import { UserParticipateComponent } from './components/usuario/user-participate/
 import { UserLoginComponent } from './components/usuario/user-login/user-login.component';
 import { UserMisfotosComponent } from './components/usuario/user-misfotos/user-misfotos.component';
 import { AdminMenuComponent } from './components/admin/admin-menu/admin-menu.component';
-import { AdminValidationComponent } from './components/admin/admin-validation/admin-validation.component';
 import { AdminUsuariosComponent } from './components/admin/admin-usuarios/admin-usuarios.component';
 import { UserAccountComponent } from './components/usuario/user-account/user-account.component';
 
@@ -34,9 +33,6 @@ export const routes: Routes = [
     },
     {
         path: 'gestionUsuarios', component: AdminUsuariosComponent
-    },
-    {
-        path: 'gestionFotografias', component: AdminValidationComponent
     },
     {
         path: 'account', component: UserAccountComponent

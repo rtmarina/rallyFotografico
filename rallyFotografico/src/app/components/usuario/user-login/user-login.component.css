@@ -1,5 +1,6 @@
 * {
     font-family: 'Lexend', sans-serif;
+    box-sizing: border-box;
 }
 
 .fondo {
@@ -7,15 +8,17 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    flex-direction: row;
 }
 
+/* Formulario */
 .formulario {
     flex: 1;
     background-color: rgba(174, 204, 238, 0.726);
     padding: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
@@ -24,7 +27,7 @@
     margin-bottom: 20px;
     font-size: 30px;
     color: #333333;
-    margin-top: 30px; 
+    margin-top: 30px;
     align-self: flex-start;
 }
 
@@ -73,10 +76,64 @@
     background-color: #0056b3;
 }
 
+/* Imagen */
 .imagen {
     flex: 1;
     background: url('/login-bg.jpg') no-repeat center center/cover;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* ------------------------ */
+/* Estilos Responsive */
+/* ------------------------ */
+@media (max-width: 992px) {
+    .formulario h2 {
+        font-size: 26px;
+        align-self: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .fondo {
+        flex-direction: column;
+    }
+
+    .imagen {
+        display: none;
+    }
+
+    .formulario {
+        flex: none;
+        width: 100%;
+        height: 100vh;
+        padding: 30px;
+    }
+
+    .formulario h2 {
+        text-align: center;
+        align-self: center;
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .formulario {
+        padding: 20px;
+    }
+
+    .formulario h2 {
+        font-size: 20px;
+    }
+
+    .formulario .form-control {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .btn-primary {
+        font-size: 15px;
+    }
 }

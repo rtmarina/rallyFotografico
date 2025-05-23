@@ -3,21 +3,25 @@
   box-sizing: border-box;
 }
 
+/* Título */
 h1 {
   font-size: 60px;
   font-weight: 600;
   color: #075886d5;
   margin-bottom: 20px;
+  text-align: center;
 }
+
 /* Galería */
 .fondo {
-  padding: 0px 0;
+  padding: 0px;
   margin-top: 20px;
 }
 
-/* Row de las fotos */
+/* Row de fotos (usa Bootstrap u otro grid si lo usas) */
 .row {
   row-gap: 30px;
+  justify-content: center;
 }
 
 /* Tarjeta de foto */
@@ -43,13 +47,15 @@ h1 {
   object-fit: cover;
 }
 
-/* Botones y acciones dentro de la tarjeta */
+/* Acciones en la tarjeta */
 .actions {
   padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .actions p {
@@ -73,7 +79,7 @@ h1 {
   color: #ff5e7d;
 }
 
-/* Paginación centrada */
+/* Paginación */
 .pagination {
   display: flex;
   justify-content: center;
@@ -83,6 +89,8 @@ h1 {
 .pagination-controls ::ng-deep .ngx-pagination {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .pagination-controls ::ng-deep .ngx-pagination .current {
@@ -102,4 +110,43 @@ h1 {
 
 .pagination-controls ::ng-deep .ngx-pagination a:hover {
   background-color: #f0f0f0 !important;
+}
+
+/* ----------------------- */
+/* Responsive */
+/* ----------------------- */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 40px;
+  }
+
+  .photo-card img {
+    height: 240px;
+  }
+
+  .actions {
+    font-size: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .like-btn {
+    font-size: 18px;
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 32px;
+  }
+
+  .photo-card img {
+    height: 200px;
+  }
+
+  .actions {
+    font-size: 13px;
+  }
 }

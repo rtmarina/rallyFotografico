@@ -5,93 +5,87 @@ body {
     background-color: #e1ebec;
 }
 
-.foto img {
-    width: 100%; /* La imagen ocupa el ancho completo */
+/* Imagen principal */
+.foto img,
+.contacto img {
+    width: 100%;
     height: 500px;
     object-fit: cover;
 }
 
+/* Contenido centrado */
 .contenido {
     font-size: 1.5em;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centra verticalmente */
-    align-items: center; /* Centra horizontalmente */
-    text-align: justify; /* Justifica el texto */
+    justify-content: center;
+    align-items: center;
+    text-align: justify;
     padding: 20px;
-    max-width: 1000px; /* Limita el ancho para que no sea demasiado ancho */
-    margin: 0 auto; /* Centra horizontalmente */
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-h1 {
-    text-align: center; /* Centra el título */
+h1, h2 {
+    text-align: center;
     margin-bottom: 20px;
 }
 
-h2 {
-    text-align: center; /* Centra el título */
-    margin-bottom: 20px;
-}
-
+/* Texto */
 .contenido p {
     margin-bottom: 20px;
     color: rgb(27, 52, 65);
 }
 
+/* Botón */
 .contenido .btn {
     background-color: #6eaff5;
     color: white;
     padding: 12px 24px;
     border: none;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: large;
     cursor: pointer;
     margin-top: 20px;
     transition: background-color 0.3s ease;
-    font-size: large;
-    
 }
 
 .contenido .btn:hover {
     background-color: #0056b3;
 }
 
+/* Carrusel */
 .carousel {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
-    margin: 0 auto;
+    margin: 20px auto;
     max-width: 1000px;
 }
 
-.carousel button:hover{
+.carousel button:hover {
     background-color: rgba(0, 0, 0, 0.267);
 }
 
-.contacto p{
+/* Contacto */
+.contacto p {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
 }
 
-.contacto img {
-    width: 100%; /* La imagen ocupa el ancho completo */
-    height: 500px;
-    object-fit: cover;
+/* Formulario */
+div form {
+    padding: 0 80px;
 }
 
-div form{
-    padding-left: 80px;
-    padding-right: 80px;
-}
-
-div form button{
+div form button {
     margin-left: 10px;
     margin-bottom: 50px;
 }
 
+/* Footer */
 .footer {
     background-color: #6eaff5;
     color: white;
@@ -99,4 +93,57 @@ div form button{
     padding: 20px;
     bottom: 0;
     width: 100%;
+}
+
+/* ---------------------- */
+/* Estilos Responsive */
+/* ---------------------- */
+@media (max-width: 768px) {
+    .contenido {
+        font-size: 1.1em;
+        padding: 15px;
+    }
+
+    .foto img,
+    .contacto img {
+        height: 300px;
+    }
+
+    div form {
+        padding: 0 20px;
+    }
+
+    .contenido .btn {
+        padding: 10px 20px;
+        font-size: medium;
+    }
+}
+
+@media (max-width: 480px) {
+    .contenido {
+        font-size: 1em;
+        padding: 10px;
+    }
+
+    .foto img,
+    .contacto img {
+        height: 200px;
+    }
+
+    h1, h2 {
+        font-size: 1.4em;
+    }
+
+    .contenido .btn {
+        font-size: small;
+    }
+
+    .carousel {
+        flex-direction: column;
+    }
+
+    div form button {
+        width: 100%;
+        margin: 10px 0;
+    }
 }

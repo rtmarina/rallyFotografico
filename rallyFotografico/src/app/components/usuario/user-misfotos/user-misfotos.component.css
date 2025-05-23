@@ -9,6 +9,7 @@ body {
   background-color: #eaf6f9;
   padding: 5px;
 }
+
 h1 {
   font-size: 60px;
   font-weight: 600;
@@ -16,7 +17,8 @@ h1 {
   margin-bottom: 20px;
   text-align: center;
 }
-/* Mensaje de alerta cuando no está logueado */
+
+/* Alerta cuando no está logueado */
 .alert-warning {
   background-color: #d5fffd;
   border: 2px solid #7aa8ff;
@@ -36,11 +38,14 @@ h1 {
   letter-spacing: 1px;
 }
 
-/* Botón de subir archivo */
+/* Carga de archivo */
 .cargar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 16px;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .cargar .btn {
@@ -60,6 +65,7 @@ h1 {
 
 .cargar input[type="file"] {
   font-size: 16px;
+  max-width: 100%;
 }
 
 /* Imagen cargada */
@@ -77,14 +83,18 @@ h1 {
 
 /* Galería */
 .fondo {
-  padding: 0px 0;
+  padding: 0;
 }
 
 .row {
   row-gap: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
 }
 
-/* Tarjeta de foto */
+/* Tarjetas */
 .photo-card {
   width: 100%;
   max-width: 380px;
@@ -107,14 +117,18 @@ h1 {
   object-fit: cover;
 }
 
-/* Botones y acciones dentro de la tarjeta */
+/* Botones dentro de tarjetas */
 .btn-group {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
 }
 
 .btn-group .btn {
   font-size: 14px;
+  padding: 8px 12px;
 }
 
 /* Paginación */
@@ -122,11 +136,14 @@ h1 {
   display: flex;
   justify-content: center;
   margin-top: 40px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .pagination-controls ::ng-deep .ngx-pagination {
   display: flex;
   gap: 6px;
+  flex-wrap: wrap;
 }
 
 .pagination-controls ::ng-deep .ngx-pagination .current {
@@ -146,4 +163,52 @@ h1 {
 
 .pagination-controls ::ng-deep .ngx-pagination a:hover {
   background-color: #f0f0f0 !important;
+}
+
+/* ------------------------- */
+/* Media Queries - Responsive */
+/* ------------------------- */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 40px;
+  }
+
+  .alert-warning {
+    max-width: 90%;
+    font-size: 16px;
+  }
+
+  .photo-card img {
+    height: 250px;
+  }
+
+  .btn-group .btn {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 30px;
+  }
+
+  .photo-card img {
+    height: 200px;
+  }
+
+  .btn-group {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-group .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cargar {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

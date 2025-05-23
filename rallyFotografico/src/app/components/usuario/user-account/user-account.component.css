@@ -1,24 +1,28 @@
 /* Estilo general */
-*{
+* {
   font-family: 'Lexend', sans-serif;
+  box-sizing: border-box;
 }
-.fondo{
-   background-image: url('/user-acc.jpg');
+
+.fondo {
+  background-image: url('/user-acc.jpg');
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 }
+
 body {
   background: #f4f7fc;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  margin: 0;
-  padding: 2rem;
 }
 
 /* Contenedor principal */
@@ -26,6 +30,7 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
+  max-width: 600px;
 }
 
 /* Tarjeta de la cuenta */
@@ -35,7 +40,6 @@ body {
   margin-top: 50px;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  max-width: 500px;
   width: 100%;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -121,10 +125,46 @@ body {
   border-color: #0056b3;
   box-shadow: 0 0 6px rgba(0, 86, 179, 0.3);
 }
+
 .no-login {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f4f7fca6;
-border-radius: 20px;
+  border-radius: 20px;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* ----------------------- */
+/* RESPONSIVE: para móvil */
+/* ----------------------- */
+
+@media (max-width: 576px) {
+  .account-card {
+    padding: 1.2rem;
+    margin-top: 20px;
+  }
+
+  .avatar-circle {
+    width: 70px;
+    height: 70px;
+    font-size: 30px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+  }
+
+  .activity-summary {
+    font-size: 13px;
+    padding: 1rem;
+  }
+
+  .edit-form input,
+  .edit-form textarea {
+    font-size: 13px;
+  }
 }
