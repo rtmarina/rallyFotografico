@@ -40,6 +40,7 @@ export class AdminServiceService {
   public actualizarUser(usuario: Usuarios) {
     let copia = JSON.parse(JSON.stringify(usuario));
     copia.servicio = "actualizarUsuario";
+    console.log("Datos a enviar para actualizar:", copia); // Verifica el objeto antes de enviarlo
     
     return this.http.post(this.url, JSON.stringify(copia));
   }

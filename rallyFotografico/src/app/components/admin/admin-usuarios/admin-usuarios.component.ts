@@ -47,12 +47,25 @@ export class AdminUsuariosComponent implements OnInit{
   }
 
   actualizarUsuario(usuario: Usuarios) {
-    this.servicio.actualizarUser(this.nuevoUsuario).subscribe(() => {
-      this.cargarUsuarios();
-      this.nuevoUsuario = { nombre: '', email: '', password: '', rol: '' };
-      this.editando = false;
-    });
-  }
+  this.errorEmail = ''; // Limpia errores anteriores
+
+  this.servicio.actualizarUser(this.nuevoUsuario).subscribe({
+    next: (res: any) => {
+      if (res.success) {
+        this.cargarUsuarios();
+        this.nuevoUsuario = { nombre: '', email: '', password: '', rol: '' };
+        this.editando = false;
+      } else {
+        this.errorEmail = res.error || 'Error desconocido al actualizar';
+      }
+    },
+    error: (err) => {
+      console.error('Error HTTP al actualizar usuario:', err);
+      this.errorEmail = 'Error de conexión con el servidor';
+    }
+  });
+}
+
   
 
   eliminarUsuario(id: number) {
