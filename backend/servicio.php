@@ -214,9 +214,29 @@ function iniciarSesion($email, $password) {
 
 function actualizarUsuario($objeto) {
     global $mysqli;
+
+    // Validaciones básicas
+    if (!isset($objeto->nombre) || strlen(trim($objeto->nombre)) <= 1) {
+        return ['success' => false, 'error' => 'Nombre inválido, debe tener al menos 1 caracter'];
+    }
+
+    if (!isset($objeto->email) || !filter_var($objeto->email, FILTER_VALIDATE_EMAIL)) {
+        return ['success' => false, 'error' => 'Email inválido'];
+    }
+
+    // Verificar si el email ya existe en otro usuario
+    $check = $mysqli->prepare("SELECT id FROM usuarios WHERE email = ? AND id != ?");
+    $check->bind_param("si", $objeto->email, $objeto->id);
+    $check->execute();
+    $check->store_result();
+
+    if ($check->num_rows > 0) {
+        return ['success' => false, 'error' => 'El email ya está en uso por otro usuario'];
+    }
+
     try {
         if (isset($objeto->password) && !empty($objeto->password)) {
-            if (strlen($objeto->password) < 6) {
+            if (strlen($objeto->password) < 4) {
                 return ['success' => false, 'error' => 'La contraseña debe tener al menos 4 caracteres'];
             }
 
@@ -238,9 +258,10 @@ function actualizarUsuario($objeto) {
             return ['success' => false, 'error' => 'No se pudo actualizar'];
         }
     } catch (Exception $e) {
-        return ['success' => false, 'error' => $e->getMessage()];
+        return ['success' => false, 'error' => 'Error interno: ' . $e->getMessage()];
     }
 }
+
 
 
 
