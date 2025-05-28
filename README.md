@@ -6,12 +6,12 @@ Aplicación web desarrollada como proyecto integrado de fin de ciclo, enfocado e
 Puesto que la aplicación no necesita instalación, aqui dejo el acceso a esta:
 [Accede a la aplicación] (https://fotorall.wuaze.com/)
 
-#créditos
+# créditos
 Desarrollado por: Marina Repolho Trujillo
 Proyecto presentado como parte del módulo de Formación en Centros de Trabajo (FCT).
 Ciclo: Desarrollo de Aplicaciones Web (DAW)
 
-#licencia
+# licencia
 Este proyecto ha sido desarrollado por Marina Repolho Trujillo en el marco del módulo de Formación en Centros de Trabajo (FCT) del ciclo formativo de Desarrollo de Aplicaciones Web (DAW).
 
 Todos los derechos están reservados.  
