@@ -4,7 +4,7 @@ Aplicación web desarrollada como proyecto integrado de fin de ciclo, enfocado e
 
 # despliegue
 Puesto que la aplicación no necesita instalación, aqui dejo el acceso a esta:
-[Accede a la aplicación] (https://fotorall.wuaze.com/)
+(https://fotorall.wuaze.com/)
 
 # créditos
 Desarrollado por: Marina Repolho Trujillo
