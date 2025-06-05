@@ -26,7 +26,7 @@ export class UserParticipateComponent {
   registrarUsuario(event: Event) {
     event.preventDefault(); // importante para evitar recarga
   
-    this.formularioEnviado = true;
+    this.formularioEnviado = true; // Se marca como enviado para mostrar errores si existen
   
     // Verificar si todos los campos están completos
     if (!this.nombre || !this.email || !this.password || !this.terminosCondiciones) {
@@ -42,17 +42,17 @@ export class UserParticipateComponent {
       rol: 'usuario' // Asignar rol por defecto
     };
   
-    console.log('Datos enviados:', usuario); // Agregar esta línea
+    console.log('Datos enviados:', usuario);
   
     // Llamada al servicio para insertar el usuario
     this.adminService.insertarUser(usuario).subscribe({
       next: (datos) => {
         console.log('Usuario registrado correctamente:', datos);
         alert('Usuario registrado con éxito');
+        // Limpiar los campos del formulario
         this.nombre = '';
         this.email = '';
         this.password = '';
-        
         this.terminosCondiciones = false;
         this.formularioEnviado = false;
         this.router.navigate(['/']);
@@ -68,9 +68,7 @@ export class UserParticipateComponent {
     });
   }
   
-  
-
-  
+  // Método para validar el formato del email
   validarEmail(email: string): boolean {
     const patronEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return patronEmail.test(email);

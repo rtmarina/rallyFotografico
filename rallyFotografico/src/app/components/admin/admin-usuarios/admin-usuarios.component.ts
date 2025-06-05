@@ -11,7 +11,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './admin-usuarios.component.css'
 })
 export class AdminUsuariosComponent implements OnInit{
+    // Lista de usuarios que se muestra en la tabla
   usuarios: Usuarios[] = [];
+   // Objeto que se usa para crear o editar un usuario
   nuevoUsuario: Usuarios = { nombre: '', email: '', password: '', rol: ''};
   editando: boolean = false;
   errorEmail: string = '';
@@ -28,12 +30,14 @@ export class AdminUsuariosComponent implements OnInit{
     });
   }
 
+  // Crea un nuevo usuario con los datos del formulario
   crearUsuario() {
     this.errorEmail = ''; 
 
     this.servicio.insertarUser(this.nuevoUsuario).subscribe({
       next: () => {
         this.cargarUsuarios();
+        //LIMPIA EL FORMULARIO
         this.nuevoUsuario = { nombre: '', email: '', password: '', rol: '' };
       },
       error: (err) => {
@@ -46,6 +50,7 @@ export class AdminUsuariosComponent implements OnInit{
     });
   }
 
+  // Actualiza los datos del usuario que se está editando
   actualizarUsuario(usuario: Usuarios) {
   this.errorEmail = ''; // Limpia errores anteriores
 
@@ -67,7 +72,7 @@ export class AdminUsuariosComponent implements OnInit{
 }
 
   
-
+// Elimina un usuario por ID (tras confirmación)
   eliminarUsuario(id: number) {
     if (confirm("¿Estás seguro de eliminar este usuario?")) {
       this.servicio.eliminarUser(id).subscribe(() => {
@@ -76,11 +81,13 @@ export class AdminUsuariosComponent implements OnInit{
     }
   }
 
+// Carga los datos del usuario seleccionado en el formulario para editarlos
   editar(usuario: Usuarios) {
-    this.nuevoUsuario = { ...usuario };
+    this.nuevoUsuario = { ...usuario }; // Copia los datos del usuario a editar
     this.editando = true;
   }
 
+    // Cancela la edición y limpia el formulario
   cancelarEdicion() {
     this.nuevoUsuario = { nombre: '', email: '', password: '', rol: '' };
     this.editando = false;

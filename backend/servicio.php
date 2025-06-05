@@ -8,15 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-    exit; // Terminar la ejecución para las solicitudes preflight
+    exit; 
 }
 
 // Conexión a la base de datos
 $mysqli = new mysqli("sql108.infinityfree.com", "if0_39016022", "jUiF8cTGgnFT9yS", "if0_39016022_rally_fotografico");
-
-
-
-
+//si hay error en la conexión, se muestra un mensaje de error
 if ($mysqli->connect_error) {
     die("Error de conexión: " . $mysqli->connect_error);
 }
@@ -27,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['peticion']) && $_GET['p
     echo json_encode(['imagenes' => $imagenes]);
     exit;
 }
-
+//convierte el JSON recibido en un objeto PHP
 $datos = file_get_contents('php://input');
 $objeto = json_decode($datos);
 
@@ -39,32 +36,6 @@ if ($objeto === null) {
 
 // $objeto = new stdClass();
 // $objeto -> servicio = "listarUsuarios";
-
-// Verificar la petición POST
-// Verifica si se hace una petición POST y si es para crear un archivo
-if (isset($_POST['peticion']) && $_POST['peticion'] == 'crearArchivo') {
-    // Verifica si se ha recibido un archivo
-    if (isset($_FILES['archivo'])) {
-        // Elimina la línea de var_dump para evitar la salida no válida
-        // var_dump($_FILES['archivo']); // Esta línea debe ser eliminada
-
-        $archivo = $_FILES['archivo'];
-        
-        // Definir el destino para el archivo
-        $directorioDestino = "imagenes/" . basename($archivo['name']);
-        
-        // Mover el archivo a la carpeta de destino
-        if (move_uploaded_file($archivo['tmp_name'], $directorioDestino)) {
-            echo json_encode(['success' => true, 'mensaje' => 'Archivo subido correctamente']);
-        } else {
-            echo json_encode(['error' => 'Error al mover el archivo']);
-        }
-    } else {
-        echo json_encode(['error' => 'No se recibió el archivo']);
-    }
-    exit;
-}
-
 
 // El resto de las funcionalidades (usuarios, etc.) se mantienen igual
 if ($objeto != null && isset($objeto->servicio)) {
@@ -116,7 +87,7 @@ if ($objeto != null && isset($objeto->servicio)) {
     }
 }
 
-
+//lista todos los usuarios de la base de datos
 function listadoUsuarios(){
     global $mysqli;
     try{
@@ -130,22 +101,23 @@ function listadoUsuarios(){
     }
 }
 
+// Crea un nuevo usuario en la base de datos
 function crearUsuario($objeto){
     global $mysqli;
 
-    // Validaciones básicas
+    // Validacione nombre
     if (!isset($objeto->nombre) || strlen(trim($objeto->nombre)) <= 1) {
         http_response_code(400);
         echo json_encode(["error" => "Nombre inválido, debe tener al menos 1 caracter"]);
         exit;
     }
-
+    //email
     if (!isset($objeto->email) || !filter_var($objeto->email, FILTER_VALIDATE_EMAIL)) {
         http_response_code(400);
         echo json_encode(["error" => "Email inválido"]);
         exit;
     }
-
+    //contraseña
     if (!isset($objeto->password) || strlen($objeto->password) < 4) {
         http_response_code(400);
         echo json_encode(["error" => "Contraseña demasiado corta (mínimo 4 caracteres)"]);
@@ -165,8 +137,7 @@ function crearUsuario($objeto){
     }
 
     // Cifrado seguro de contraseña
-
-$passwordSegura = password_hash($objeto->password, PASSWORD_DEFAULT);
+    $passwordSegura = password_hash($objeto->password, PASSWORD_DEFAULT);
 
 try {
     $sql = "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)";
@@ -179,8 +150,9 @@ try {
     echo json_encode(["error" => "Error interno: " . $e->getMessage()]);
     return false;
 }
-
 }
+
+// Inicia sesión verificando el email y la contraseña
 function iniciarSesion($email, $password) {
     global $mysqli;
     try {
@@ -209,17 +181,15 @@ function iniciarSesion($email, $password) {
 }
 
 
-
-
-
+// Actualiza los datos de un usuario
 function actualizarUsuario($objeto) {
     global $mysqli;
 
-    // Validaciones básicas
+    // Validacion nombre
     if (!isset($objeto->nombre) || strlen(trim($objeto->nombre)) <= 1) {
         return ['success' => false, 'error' => 'Nombre inválido, debe tener al menos 1 caracter'];
     }
-
+    //email
     if (!isset($objeto->email) || !filter_var($objeto->email, FILTER_VALIDATE_EMAIL)) {
         return ['success' => false, 'error' => 'Email inválido'];
     }
@@ -262,13 +232,11 @@ function actualizarUsuario($objeto) {
     }
 }
 
-
-
-
+// Elimina un usuario y sus fotos asociadas
 function eliminarUsuario($id) {
     global $mysqli;
     try {
-        // Eliminar fotos relacionadas con el usuario (si es necesario)
+        // Eliminar fotos relacionadas con el usuario (si el usuario tiene fotos)
         $sqlFotos = "DELETE FROM fotografias WHERE usuario_id = ?";
         $stmtFotos = $mysqli->prepare($sqlFotos);
         $stmtFotos->bind_param("i", $id);
@@ -291,6 +259,7 @@ function eliminarUsuario($id) {
     }
 }
 
+// Función para obtener el número de fotos subidas por un usuario
 function obtenerFotosSubidas($usuario_id) {
     global $mysqli;
     try {
@@ -306,10 +275,8 @@ function obtenerFotosSubidas($usuario_id) {
     }
 }
 
-
-
 // IMÁGENES
-
+// Registra una nueva imagen en la base de datos
 function registrarImagen($objeto) {
     global $mysqli;
     try {
@@ -336,9 +303,7 @@ function registrarImagen($objeto) {
     exit();
 }
 
-
-
-
+// Lista las fotos subidas por un usuario específico
 function listarFotosPorUsuario($usuario_id) {
     global $mysqli;
     try {
@@ -353,6 +318,7 @@ function listarFotosPorUsuario($usuario_id) {
     }
 }
 
+// Elimina una foto específica de la base de datos
 function eliminarFoto($id) {
     global $mysqli;
     try {
@@ -369,6 +335,7 @@ function eliminarFoto($id) {
     }
 }
 
+// Actualiza el número de likes de una foto específica
 function actualizarLikes($foto_id) {
     global $mysqli;
     try {
@@ -392,7 +359,7 @@ function listarArchivosDesdeBaseDeDatos() {
         $stm->execute();
         $result = $stm->get_result();
         
-        // Almacena las imágenes en un arreglo
+        // Almacena las imágenes en un array
         $imagenes = [];
         while ($row = $result->fetch_assoc()) {
             $imagenes[] = [
@@ -409,6 +376,7 @@ function listarArchivosDesdeBaseDeDatos() {
     }
 }
 
+// Actualiza el nombre de una foto específica
 function actualizarNombreFoto($id, $nuevoNombre) {
     global $mysqli;
     try {
@@ -425,6 +393,7 @@ function actualizarNombreFoto($id, $nuevoNombre) {
     }
 }
 
+// Actualiza la foto de perfil de un usuario
 function actualizarFotoPerfil($usuario_id, $base64) {
     global $mysqli;
 
@@ -447,6 +416,7 @@ function actualizarFotoPerfil($usuario_id, $base64) {
     }
 }
 
+// Obtiene los datos de un usuario específico por su ID
 function getUsuario($id) {
     global $mysqli;
     $sql = "SELECT id, nombre, email, rol, fecha_registro, imagen_perfil FROM usuarios WHERE id = ?";

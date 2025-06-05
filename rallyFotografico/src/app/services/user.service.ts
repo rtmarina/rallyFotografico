@@ -7,10 +7,12 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class UserService {
+  //api
   private url = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
+  //iniciar sesión
   iniciarSesion( email: string, password: string ) {
     const cuerpo = {
       servicio: 'iniciarSesion',
@@ -68,6 +70,7 @@ listarFotosPorUsuario(usuario_id: number): Observable<any> {
   return this.http.post(this.url, cuerpo);
 }
 
+// Eliminar foto por ID
 eliminarFoto(id: number): Observable<any> {
   const cuerpo = {
     servicio: 'eliminarFoto',
@@ -76,6 +79,7 @@ eliminarFoto(id: number): Observable<any> {
   return this.http.post(this.url, cuerpo);
 }
 
+// Actualizar nombre de la foto
 actualizarNombreFoto(id: number, nuevoNombre: string): Observable<any> {
   const cuerpo = {
     servicio: 'actualizarNombreFoto',
@@ -85,6 +89,7 @@ actualizarNombreFoto(id: number, nuevoNombre: string): Observable<any> {
   return this.http.post(this.url, cuerpo);
 }
 
+// Actualizar foto de perfil usuario
 actualizarFotoPerfil(usuario_id: number, base64: string) {
   const datos = {
     servicio: 'actualizarFotoPerfil',
@@ -94,6 +99,7 @@ actualizarFotoPerfil(usuario_id: number, base64: string) {
   return this.http.post<any>(this.url, datos);
 }
 
+// Obtener usuario por ID
 getUsuario(id: number) {
   const datos = {
     servicio: 'getUsuario',
@@ -101,8 +107,5 @@ getUsuario(id: number) {
   };
   return this.http.post<any>(this.url, datos);
 }
-
-
-
 
 }

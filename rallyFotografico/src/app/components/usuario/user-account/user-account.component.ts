@@ -26,6 +26,7 @@ usuario: any = null;
   }
 
  cargarUsuario() {
+  // Si hay usuario en localStorage, lo busca del backend por ID
   const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || 'null');
 
   if (usuarioLocal && usuarioLocal.id) {
@@ -47,11 +48,12 @@ usuario: any = null;
 
 
   cerrarSesion() {
-    localStorage.removeItem('usuario');
+    localStorage.removeItem('usuario'); // Elimina el usuario guardado en LS
     this.router.navigate(['/login']);
   }
 
   guardarCambios() {
+    // Prepara los datos que se van a enviar al backend (sin incluir la contraseña ni imagen)
     const datosActualizados = {
       id: this.usuario.id,
       nombre: this.usuario.nombre,
@@ -70,6 +72,7 @@ usuario: any = null;
   }
 
   cambiarContrasena() {
+    //validacion contraseña
     if (!this.nuevaPassword || !this.confirmarPassword) {
       alert("Debes rellenar ambos campos.");
       return;
@@ -80,6 +83,7 @@ usuario: any = null;
       return;
     }
 
+    //solo actualiza la contraseña si es diferente
     this.usuario.password = this.nuevaPassword;
     this.userService.actualizarUsuario(this.usuario).subscribe(res => {
       if (res.success) {

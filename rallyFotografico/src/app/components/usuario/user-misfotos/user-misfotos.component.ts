@@ -14,14 +14,15 @@ import { FormsModule } from '@angular/forms';
 export class UserMisfotosComponent {
   imagen64: string = '';
   nombreArchivo: string = '';
-  photos: any[] = [];
+  photos: any[] = []; //fotos del usuario
   currentPage: number = 1;
-  usuario: any = null;
+  usuario: any = null; //usuario logueado
   logueado: boolean = false;
 
   constructor(private userService: UserService) {}
 
   ngOnInit() {
+    //si el usuario está en localStorage, lo carga y obtiene sus fotos
     const usuarioString = localStorage.getItem('usuario');
   if (usuarioString) {
     this.usuario = JSON.parse(usuarioString);
@@ -32,6 +33,7 @@ export class UserMisfotosComponent {
   }
   }
 
+  // Método para leer la imagen seleccionada y convertirla a Base64
   leerImagen(event: any) {
     const archivo = event.target.files[0];
     if (!archivo) {
@@ -62,7 +64,7 @@ export class UserMisfotosComponent {
   const padding = (base64String.endsWith('==') ? 2 : base64String.endsWith('=') ? 1 : 0);
   const sizeInBytes = (base64String.length * 3) / 4 - padding;
 
-  const maxSizeInBytes = 1 * 1024 * 1024; // 10MB
+  const maxSizeInBytes = 1 * 1024 * 1024; // 1MB
   if (sizeInBytes > maxSizeInBytes) {
     alert('La imagen supera el límite de 1MB. Por favor elige otra.');
     return;
@@ -92,8 +94,7 @@ export class UserMisfotosComponent {
 }
 
 
-  
-
+  // Método para cargar las fotos del usuario
   cargarFotos() {
     if (!this.usuario) {
       console.warn('Usuario no encontrado para cargar fotos.');

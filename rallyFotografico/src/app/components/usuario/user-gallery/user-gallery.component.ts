@@ -14,12 +14,12 @@ export class UserGalleryComponent {
   photos: any[] = []; // Lista dinámica de fotos cargadas desde el backend
   currentPage = 1; // Página actual para la paginación
   url = environment.apiUrl; // URL del backend
-usuarioLogueado: boolean = false;
+  usuarioLogueado: boolean = false;
   constructor() {}
 
   ngOnInit() {
     const usuario = localStorage.getItem('usuario');
-  this.usuarioLogueado = !!usuario;
+    this.usuarioLogueado = !!usuario; // Convierte a true si existe usuario
     this.cargarImagenes(); 
     // Cargar imágenes al iniciar el componente
   }

@@ -12,13 +12,14 @@ import { UserService } from '../../../services/user.service';
 })
 export class AdminMenuComponent {
 nombreAdmin: string = '';
-  constructor(private userService: UserService) {
-    
+  constructor(private userService: UserService) { 
   }
+  //lo primero que se ejecuta al iniciar el componente
   ngOnInit() {
     this.cargarNombreUsuario();
   }
 
+  // Método para cargar el nombre del usuario desde localStorage
 cargarNombreUsuario() {
   const usuarioLocal = JSON.parse(localStorage.getItem('usuario') || 'null');
 
